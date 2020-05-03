@@ -38,6 +38,7 @@
 #include "net/ipv6/uip-ds6.h"
 
 #include "simple-udp.h"
+#include "dev/serial-line.h"
 
 
 #include <stdio.h>
@@ -52,7 +53,10 @@ static struct simple_udp_connection broadcast_connection;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(broadcast_example_process, "UDP broadcast example process");
-AUTOSTART_PROCESSES(&broadcast_example_process);
+PROCESS(test_serial, "Serial line test process");
+AUTOSTART_PROCESSES(&broadcast_example_process,&test_serial);
+
+
 /*---------------------------------------------------------------------------*/
 static void
 receiver(struct simple_udp_connection *c,
@@ -93,4 +97,17 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
 
   PROCESS_END();
 }
+
+ PROCESS_THREAD(test_serial, ev, data)
+ {
+   PROCESS_BEGIN();
+
+   for(;;) {
+     PROCESS_YIELD();
+     if(ev == serial_line_event_message) {
+       printf("received line: %s\n", (char *)data);
+     }
+   }
+   PROCESS_END();
+ }
 /*---------------------------------------------------------------------------*/
