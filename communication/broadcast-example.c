@@ -87,7 +87,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
 
   while(1) {
     char *msg = (char *) data;
-    PROCESS_WAIT_EVENT(ev = PROCESS_EVENT_CONTINUE);
+    PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
 
     printf("Sending broadcast %s\n", msg);
     uip_create_linklocal_allnodes_mcast(&addr);
