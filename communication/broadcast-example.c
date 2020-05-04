@@ -91,7 +91,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
 
     printf("Sending broadcast %s\n", msg);
     uip_create_linklocal_allnodes_mcast(&addr);
-    simple_udp_sendto(&broadcast_connection, msg, strlen(msg), &addr);
+    simple_udp_sendto(&broadcast_connection, msg, 5, &addr);
   }
 
   PROCESS_END();
