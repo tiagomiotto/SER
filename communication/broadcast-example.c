@@ -68,8 +68,8 @@ receiver(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  printf("Data received on port %d from port %d with length %d\n",
-         receiver_port, sender_port, datalen);
+  printf("Data received on port %d from port %d with length %d : %s\n",
+         receiver_port, sender_port, datalen, (char *) data);
 }
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(broadcast_example_process, ev, data)
@@ -84,10 +84,10 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
                       NULL, UDP_PORT,
                       receiver);
 
-  etimer_set(&periodic_timer, SEND_INTERVAL);
+
   while(1) {
     char *msg = (char *) data;
-    PROCESS_WAIT_EVENT();
+    PROCESS_WAIT_EVENT(ev = PROCESS_EVENT_CONTINUE);
 
     printf("Sending broadcast %s\n", msg);
     uip_create_linklocal_allnodes_mcast(&addr);
