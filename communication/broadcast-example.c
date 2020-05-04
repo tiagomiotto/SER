@@ -51,6 +51,7 @@
 
 static struct simple_udp_connection broadcast_connection;
 
+
 /*---------------------------------------------------------------------------*/
 PROCESS(broadcast_example_process, "UDP broadcast example process");
 PROCESS(test_serial, "Serial line test process");
@@ -92,7 +93,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
     printf("Sending broadcast\n");
     uip_create_linklocal_allnodes_mcast(&addr);
-    simple_udp_sendto(&broadcast_connection, "Test", 4, &addr);
+    simple_udp_sendto(&broadcast_connection, data, 4, &addr);
   }
 
   PROCESS_END();
@@ -103,13 +104,11 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
    PROCESS_BEGIN();
 
    for(;;) {
-    //  PROCESS_YIELD();
-     
-    //  if(ev == serial_line_event_message) {
-    //    printf("received line: %s\n", (char *)data);
-    //  }
+
     PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
     printf("received line: %s\n", (char *)data);
+    process_post(&broadcast_example_process,
+      PROCESS_EVENT_MSG, data);
    }
    PROCESS_END();
  }
