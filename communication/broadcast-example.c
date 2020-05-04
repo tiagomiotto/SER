@@ -87,11 +87,8 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
   etimer_set(&periodic_timer, SEND_INTERVAL);
   while(1) {
     char *msg = data;
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-    etimer_reset(&periodic_timer);
-    etimer_set(&send_timer, SEND_TIME);
+    PROCESS_WAIT_EVENT();
 
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
     printf("Sending broadcast %s\n", msg);
     uip_create_linklocal_allnodes_mcast(&addr);
     simple_udp_sendto(&broadcast_connection, &msg, 4, &addr);
