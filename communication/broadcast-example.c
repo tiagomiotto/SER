@@ -108,7 +108,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
     //  if(ev == serial_line_event_message) {
     //    printf("received line: %s\n", (char *)data);
     //  }
-    PROCESS_WAIT_EVENT_UNTIL(ev,serial_line_event_message);
+    PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
     printf("received line: %s\n", (char *)data);
    }
    PROCESS_END();
