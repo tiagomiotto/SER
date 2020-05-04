@@ -103,10 +103,13 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
    PROCESS_BEGIN();
 
    for(;;) {
-     PROCESS_YIELD();
-     if(ev == serial_line_event_message) {
-       printf("received line: %s\n", (char *)data);
-     }
+    //  PROCESS_YIELD();
+     
+    //  if(ev == serial_line_event_message) {
+    //    printf("received line: %s\n", (char *)data);
+    //  }
+    PROCESS_WAIT_EVENT_UNTIL(ev,serial_line_event_message);
+    printf("received line: %s\n", (char *)data);
    }
    PROCESS_END();
  }
