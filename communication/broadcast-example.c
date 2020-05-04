@@ -86,7 +86,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
   while(1) {
-    char *msg = data;
+    char *msg = (char *) data;
     PROCESS_WAIT_EVENT();
 
     printf("Sending broadcast %s\n", msg);
