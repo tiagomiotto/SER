@@ -57,7 +57,7 @@ PROCESS(broadcast_example_process, "UDP broadcast example process");
 PROCESS(handler_proccess, "Serial message handler process");
 PROCESS(test_serial, "Serial line test process");
 
-AUTOSTART_PROCESSES(&handler_proccess,&test_serial, );
+AUTOSTART_PROCESSES(&handler_proccess,&test_serial );
 
 
 /*---------------------------------------------------------------------------*/
