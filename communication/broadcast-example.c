@@ -55,7 +55,8 @@ static struct simple_udp_connection broadcast_connection;
 /*---------------------------------------------------------------------------*/
 PROCESS(broadcast_example_process, "UDP broadcast example process");
 PROCESS(test_serial, "Serial line test process");
-AUTOSTART_PROCESSES(&broadcast_example_process,&test_serial);
+PROCESS(handler_proccess, "Serial line test process");
+AUTOSTART_PROCESSES(&test_serial, &handler_proccess);
 
 
 /*---------------------------------------------------------------------------*/
@@ -86,8 +87,8 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
 
 
   while(1) {
+        PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
     char *msg = (char *) data;
-    PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
 
     printf("Sending broadcast %s\n", msg);
     uip_create_linklocal_allnodes_mcast(&addr);
@@ -105,9 +106,32 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
 
     PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
     printf("received line: %s\n", (char *)data);
-    process_post(&broadcast_example_process,
+    process_post(&handler_example_process,
       PROCESS_EVENT_CONTINUE, data);
    }
    PROCESS_END();
  }
 /*---------------------------------------------------------------------------*/
+
+
+PROCESS_THREAD(handler_process, ev, data)
+{
+  static struct etimer periodic_timer;
+  static struct etimer send_timer;
+  uip_ipaddr_t addr;
+
+  PROCESS_BEGIN();
+
+
+  while(1) {
+    PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
+    char *msg = (char *) data;
+
+    if(strcmp(msg,"a"))     process_post(&broadcast_example_process,
+      PROCESS_EVENT_CONTINUE, "tesa");
+    if(strcmp(msg,"b"))     process_post(&broadcast_example_process,
+      PROCESS_EVENT_CONTINUE, "tesb");      
+  }
+
+  PROCESS_END();
+}
