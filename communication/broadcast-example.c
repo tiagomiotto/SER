@@ -54,9 +54,10 @@ static struct simple_udp_connection broadcast_connection;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(broadcast_example_process, "UDP broadcast example process");
-PROCESS(test_serial, "Serial line test process");
 PROCESS(handler_proccess, "Serial message handler process");
-AUTOSTART_PROCESSES(&test_serial, &handler_proccess);
+PROCESS(test_serial, "Serial line test process");
+
+AUTOSTART_PROCESSES(&handler_proccess,&test_serial, );
 
 
 /*---------------------------------------------------------------------------*/
