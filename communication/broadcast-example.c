@@ -55,7 +55,7 @@ static struct simple_udp_connection broadcast_connection;
 /*---------------------------------------------------------------------------*/
 PROCESS(broadcast_example_process, "UDP broadcast example process");
 PROCESS(test_serial, "Serial line test process");
-PROCESS(handler_proccess, "Serial line test process");
+PROCESS(handler_proccess, "Serial message handler process");
 AUTOSTART_PROCESSES(&test_serial, &handler_proccess);
 
 
@@ -98,22 +98,6 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
   PROCESS_END();
 }
 
- PROCESS_THREAD(test_serial, ev, data)
- {
-   PROCESS_BEGIN();
-
-   for(;;) {
-
-    PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
-    printf("received line: %s\n", (char *)data);
-    process_post(&handler_process,
-      PROCESS_EVENT_CONTINUE, data);
-   }
-   PROCESS_END();
- }
-/*---------------------------------------------------------------------------*/
-
-
 PROCESS_THREAD(handler_process, ev, data)
 {
   static struct etimer periodic_timer;
@@ -135,3 +119,20 @@ PROCESS_THREAD(handler_process, ev, data)
 
   PROCESS_END();
 }
+
+ PROCESS_THREAD(test_serial, ev, data)
+ {
+   PROCESS_BEGIN();
+
+   for(;;) {
+
+    PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
+    printf("received line: %s\n", (char *)data);
+    process_post(&handler_process,
+      PROCESS_EVENT_CONTINUE, data);
+   }
+   PROCESS_END();
+ }
+/*---------------------------------------------------------------------------*/
+
+
