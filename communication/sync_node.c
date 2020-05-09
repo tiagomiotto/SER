@@ -54,7 +54,7 @@ static struct simple_udp_connection broadcast_connection;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(broadcast_example_process, "UDP broadcast example process");
-PROCESS(handler_proccess, "Serial message handler process");
+PROCESS(handler_process, "Serial message handler process");
 PROCESS(test_serial, "Serial line test process");
 PROCESS(network_size, "Network size check periodic process");
 
