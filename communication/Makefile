@@ -1,4 +1,4 @@
-all: broadcast-example unicast-sender unicast-receiver
+all: broadcast-example unicast-sender unicast-receiver sync_node
 APPS=servreg-hack
 CONTIKI=/home/user/Desktop/contiki
 
