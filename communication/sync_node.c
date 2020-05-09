@@ -56,6 +56,7 @@ static struct simple_udp_connection broadcast_connection;
 PROCESS(broadcast_example_process, "UDP broadcast example process");
 PROCESS(handler_proccess, "Serial message handler process");
 PROCESS(test_serial, "Serial line test process");
+PROCESS(network_size, "Network size check periodic process");
 
 AUTOSTART_PROCESSES(&handler_proccess,&test_serial);
 
@@ -112,10 +113,19 @@ PROCESS_THREAD(handler_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
     char *msg = (char *) data;
 
-    if(strcmp(msg,"a"))     process_post(&broadcast_example_process,
-      PROCESS_EVENT_CONTINUE, "tesa");
-    if(strcmp(msg,"b"))     process_post(&broadcast_example_process,
-      PROCESS_EVENT_CONTINUE, "tesb");      
+    if(strcmp(msg,"a"))   printf("received line: %s\n", (char *)msg);  
+    else if(strcmp(msg,"b"))   printf("received line: %s\n", (char *)msg);
+    else {
+      printf("Invalid option\n");
+      continue;
+    }
+
+    char *msg = (char *) data;
+    PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
+    
+    if(strcmp(msg,"a"))    printf("it works %s \n",(char *)msg ); 
+    else if(strcmp(msg,"b"))   printf("it works %s \n",(char *)msg ); 
+
   }
 
   PROCESS_END();
@@ -132,6 +142,18 @@ PROCESS_THREAD(handler_process, ev, data)
     printf("received line: %s\n", (char *)data);
     process_post(&handler_process,
       PROCESS_EVENT_CONTINUE, data);
+   }
+   PROCESS_END();
+ }
+
+  PROCESS_THREAD(network_size, ev, data)
+ {
+   PROCESS_BEGIN();
+
+   for(;;) {
+
+    PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
+
    }
    PROCESS_END();
  }
