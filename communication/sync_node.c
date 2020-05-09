@@ -112,7 +112,7 @@ PROCESS_THREAD(handler_process, ev, data)
   while(1) {
     PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
     char *msg = (char *) data;
-
+    ev=NULL;
     if(strcmp(msg,"a"))   printf("received line: %s\n", (char *)msg);  
     else if(strcmp(msg,"b"))   printf("received line: %s\n", (char *)msg);
     else {
