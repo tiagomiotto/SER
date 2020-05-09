@@ -58,7 +58,7 @@ PROCESS(handler_process, "Serial message handler process");
 PROCESS(test_serial, "Serial line test process");
 PROCESS(network_size, "Network size check periodic process");
 
-AUTOSTART_PROCESSES(&test_serial,&handler_proccess);
+AUTOSTART_PROCESSES(&test_serial,&handler_process);
 
 
 /*---------------------------------------------------------------------------*/
