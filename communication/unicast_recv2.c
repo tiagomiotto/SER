@@ -74,7 +74,7 @@ receiver(struct simple_udp_connection *c,
     char buf[20];
 
       printf("Sending unicast to ");
-      uip_debug_ipaddr_print(addr);
+      uip_debug_ipaddr_print(sender_addr);
       printf("\n");
       sprintf(buf, "Message %d", 1);
       
