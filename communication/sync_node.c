@@ -120,12 +120,16 @@ PROCESS_THREAD(handler_process, ev, data)
       continue;
     }
 
-    char *msg = (char *) data;
-    PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
     
-    if(strcmp(msg,"a"))    printf("it works %s \n",(char *)msg ); 
-    else if(strcmp(msg,"b"))   printf("it works %s \n",(char *)msg ); 
+    PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
+    *msg = (char *) data;
 
+    if(strcmp(msg,"c"))    printf("it works %s \n",(char *)msg ); 
+    else if(strcmp(msg,"d"))   printf("it works %s \n",(char *)msg ); 
+    else {
+      printf("Invalid option\n");
+      continue;
+    }
   }
 
   PROCESS_END();
