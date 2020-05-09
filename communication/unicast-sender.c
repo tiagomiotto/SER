@@ -129,6 +129,18 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
       simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
     } else {
       printf("Service %d not found\n", SERVICE_ID);
+      static unsigned int message_number;
+      char buf[20];
+
+      printf("Sending unicast to %d: ", SERVICE_ID+1);
+      uip_debug_ipaddr_print(addr);
+      printf("\n");
+      sprintf(buf, "Message %d", message_number);
+      message_number++;
+      
+      addr = servreg_hack_lookup(SERVICE_ID+1);
+      simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
+
     }
   }
 
