@@ -58,7 +58,7 @@ PROCESS(handler_proccess, "Serial message handler process");
 PROCESS(test_serial, "Serial line test process");
 PROCESS(network_size, "Network size check periodic process");
 
-AUTOSTART_PROCESSES(&handler_proccess,&test_serial);
+AUTOSTART_PROCESSES(&test_serial,&handler_proccess);
 
 
 /*---------------------------------------------------------------------------*/
@@ -122,7 +122,7 @@ PROCESS_THREAD(handler_process, ev, data)
 
     
     PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
-    *msg = (char *) data;
+    msg = (char *) data;
 
     if(strcmp(msg,"c"))    printf("it works %s \n",(char *)msg ); 
     else if(strcmp(msg,"d"))   printf("it works %s \n",(char *)msg ); 
