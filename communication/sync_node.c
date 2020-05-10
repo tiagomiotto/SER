@@ -113,8 +113,8 @@ PROCESS_THREAD(handler_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
     char *msg = (char *) data;
  
-    if(strcmp(msg,"a"))   printf("received line: %s\n", (char *)msg);  
-    else if(strcmp(msg,"b"))   printf("received line: %s\n", (char *)msg);
+    if(strcmp(msg,"a"))   printf("received line1: %s\n", (char *)msg);  
+    else if(strcmp(msg,"b"))   printf("received line:2 %s\n", (char *)msg);
     else {
       printf("Invalid option\n");
       continue;
@@ -124,8 +124,8 @@ PROCESS_THREAD(handler_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
     msg = (char *) data;
 
-    if(strcmp(msg,"c"))    printf("it works %s \n",(char *)msg ); 
-    else if(strcmp(msg,"d"))   printf("it works %s \n",(char *)msg ); 
+    if(strcmp(msg,"c"))    printf("it works1 %s \n",(char *)msg ); 
+    else if(strcmp(msg,"d"))   printf("it works2 %s \n",(char *)msg ); 
     else {
       printf("Invalid option\n");
       continue;
