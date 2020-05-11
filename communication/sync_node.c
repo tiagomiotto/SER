@@ -114,7 +114,10 @@ PROCESS_THREAD(handler_process, ev, data)
     
     char *msg = (char *) data;
  
-    if(strcmp(msg,"info")==0)   printf("The current state of the system is \n", (char *)msg);  
+    if(strcmp(msg,"info")==0)   {
+      printf("The current state of the system is %s\n", (char *)msg); 
+      continue;
+    }
     else if(strcmp(msg,"command")==0)   {
       printf("The current nodes are ");
       for (i = 0; i < 4; i++)
@@ -124,7 +127,7 @@ PROCESS_THREAD(handler_process, ev, data)
       printf("select on/off followed by the number of the node\n");
     }
     else {
-      printf("Invalid option, use state to get the state of the networrk or command to send commands\n");
+      printf("Invalid option, use info to get the state of the networrk or command to send commands\n");
       continue;
     }
 
@@ -147,7 +150,7 @@ PROCESS_THREAD(handler_process, ev, data)
  PROCESS_THREAD(test_serial, ev, data)
  {
    PROCESS_BEGIN();
-    printf("Use state to get the state of the networrk or command to send commands\n");
+    printf("Use info to get the state of the network or command to send commands\n");
    for(;;) {
 
     PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
