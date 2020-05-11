@@ -105,7 +105,7 @@ PROCESS_THREAD(handler_process, ev, data)
   static struct etimer periodic_timer;
   static struct etimer send_timer;
   uip_ipaddr_t addr;
-
+  int i=0;
   PROCESS_BEGIN();
 
 
@@ -117,7 +117,7 @@ PROCESS_THREAD(handler_process, ev, data)
     if(strcmp(msg,"info")==0)   printf("The current state of the system is \n", (char *)msg);  
     else if(strcmp(msg,"command")==0)   {
       printf("The current nodes are ");
-      for (int i = 0; i < 4; i++)
+      for (i = 0; i < 4; i++)
       {
         printf("%d, ", i);
       }
