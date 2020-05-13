@@ -36,6 +36,7 @@
 #include "sys/etimer.h"
 #include "net/ip/uip.h"
 #include "net/ipv6/uip-ds6.h"
+#include "servreg-hack.h"
 
 #include "simple-udp.h"
 #include "dev/serial-line.h"
@@ -164,8 +165,7 @@ PROCESS_THREAD(test_serial, ev, data)
 
 
 /*---------------------------------------------------------------------------*/
-void
-search_list(servreg_hack_item_t *head,
+void search_list(servreg_hack_item_t *head,
 {
     if (!head)
     {
