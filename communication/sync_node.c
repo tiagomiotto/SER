@@ -165,7 +165,7 @@ PROCESS_THREAD(test_serial, ev, data)
 
 
 /*---------------------------------------------------------------------------*/
-void search_list(servreg_hack_item_t *head,
+void search_list(servreg_hack_item_t *head)
 {
     if (!head)
     {
