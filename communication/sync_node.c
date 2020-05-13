@@ -36,7 +36,7 @@
 #include "sys/etimer.h"
 #include "net/ip/uip.h"
 #include "net/ipv6/uip-ds6.h"
-#include "servreg-hack.h"
+//#include "servreg-hack.h"
 
 #include "simple-udp.h"
 #include "dev/serial-line.h"
