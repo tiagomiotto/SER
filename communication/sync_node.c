@@ -168,7 +168,7 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
 {
   static struct etimer periodic_timer;
   uip_ipaddr_t addr;
-
+  servreg_hack_item_t *nodeList;
   PROCESS_BEGIN();
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
@@ -177,10 +177,32 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
     
+    nodeList=servreg_hack_list_head();
+
     printf("Check nodes\n", msg);
 
   }
 
   PROCESS_END();
+}
+int
+search_list(servreg_hack_item_t *head,
+{
+    if (!head)
+    {
+        fprintf(stderr, "Invalid head\n");
+        return 1;
+    }
+
+    servreg_hack_item_t *temp = head;
+
+    while (temp)
+    {
+        printf("Node %d\n", servreg_hack_item_id(temp));
+        temp = temp->next;
+
+    }
+
+    return 0;
 }
 /*---------------------------------------------------------------------------*/
