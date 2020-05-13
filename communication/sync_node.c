@@ -187,7 +187,6 @@ search_list(servreg_hack_item_t *head,
 PROCESS_THREAD(available_nodes_proccess, ev, data)
 {
   static struct etimer periodic_timer;
-  uip_ipaddr_t addr;
   servreg_hack_item_t *nodeList;
   PROCESS_BEGIN();
 
@@ -199,7 +198,7 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
     
     nodeList=servreg_hack_list_head();
     
-    printf("Check nodes\n", msg);
+    printf("Check nodes\n");
     search_list(nodeList);
   }
 
