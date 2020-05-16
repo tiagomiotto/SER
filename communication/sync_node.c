@@ -36,7 +36,7 @@
 #include "sys/etimer.h"
 #include "net/ip/uip.h"
 #include "net/ipv6/uip-ds6.h"
-//#include "servreg-hack.h"
+#include "servreg-hack.h"
 
 #include "simple-udp.h"
 #include "dev/serial-line.h"
@@ -75,8 +75,7 @@ receiver(struct simple_udp_connection *c,
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(broadcast_example_process, ev, data)
 {
-  static struct etimer periodic_timer;
-  static struct etimer send_timer;
+
   uip_ipaddr_t addr;
 
   PROCESS_BEGIN();
@@ -100,9 +99,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
 
 PROCESS_THREAD(handler_process, ev, data)
 {
-  static struct etimer periodic_timer;
-  static struct etimer send_timer;
-  uip_ipaddr_t addr;
+
   int i = 0;
   PROCESS_BEGIN();
 
