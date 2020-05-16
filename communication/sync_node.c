@@ -74,7 +74,7 @@ receiver(struct simple_udp_connection *c,
          receiver_port, sender_port, datalen, (char *)data);
 }
 
-set_global_address(void)
+static uip_ipaddr_t *set_global_address(void)
 {
   static uip_ipaddr_t ipaddr;
   int i;
