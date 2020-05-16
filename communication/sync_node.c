@@ -172,7 +172,6 @@ void search_list()
         printf("Id %d address ", servreg_hack_item_id(item));
         uip_debug_ipaddr_print(servreg_hack_item_address(item));
         printf("\n");
-        
       }
     
 }
@@ -181,6 +180,7 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
   static struct etimer periodic_timer;
   //servreg_hack_item_t *nodeList;
   PROCESS_BEGIN();
+  servreg_hack_init();
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
   while (1)
