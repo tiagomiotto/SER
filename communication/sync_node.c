@@ -46,9 +46,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#define UDP_PORT 1234
-#define SERVICE_ID 12
 /*SERVICE ID FOR SYNC NODE IS 1*/
+#define UDP_PORT 1234
+#define ID 1
+
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
 static struct simple_udp_connection broadcast_connection;
@@ -161,7 +162,7 @@ PROCESS_THREAD(communications_process, ev, data)
 
   create_rpl_dag(ipaddr);
 
-  servreg_hack_register(SERVICE_ID, ipaddr);
+  servreg_hack_register(ID, ipaddr);
 
   while (1)
   {
