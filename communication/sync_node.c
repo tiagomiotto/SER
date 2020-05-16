@@ -162,25 +162,18 @@ PROCESS_THREAD(test_serial, ev, data)
 
 
 /*---------------------------------------------------------------------------*/
-// void search_list(servreg_hack_item_t *head)
-// {
-//     if (!head)
-//     {
-//         fprintf(stderr, "Invalid head\n");
-//         return 1;
-//     }
-
-//     servreg_hack_item_t *temp = head;
-
-//     while (temp)
-//     {
-//         printf("Node %d\n", servreg_hack_item_id(temp));
-//         temp = temp->next;
-
-//     }
-
-//     return 0;
-// }
+void search_list()
+{
+      for(item = servreg_hack_list_head();
+          item != NULL;
+          item = list_item_next(item)) {
+        printf("Id %d address ", servreg_hack_item_id(item));
+        uip_debug_ipaddr_print(servreg_hack_item_address(item));
+        printf("\n");
+        
+      }
+    
+}
 PROCESS_THREAD(available_nodes_proccess, ev, data)
 {
   static struct etimer periodic_timer;
@@ -193,11 +186,11 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
     
-    nodeList=servreg_hack_list_head();
+    //nodeList=servreg_hack_list_head();
     
-    printf("Check nodes %s\n", (char*) nodeList);
+    printf("Check nodes \n");
     //printf("Node %d\n", servreg_hack_item_id(nodeList));
-    //search_list(nodeList);
+    search_list(nodeList);
   }
 
   PROCESS_END();
