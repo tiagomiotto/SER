@@ -41,6 +41,7 @@
 
 #include "simple-udp.h"
 #include "dev/serial-line.h"
+#include "net/rpl/rpl.h"
 
 #include <stdio.h>
 #include <string.h>
