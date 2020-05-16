@@ -159,11 +159,11 @@ PROCESS_THREAD(communications_process, ev, data)
 
   servreg_hack_init();
 
-  ipaddr = set_global_address();
+  addr = set_global_address();
 
-  create_rpl_dag(ipaddr);
+  create_rpl_dag(addr);
 
-  servreg_hack_register(SERVICE_ID, ipaddr);
+  servreg_hack_register(SERVICE_ID, addr);
 
   while (1)
   {
