@@ -47,7 +47,7 @@
 #include <string.h>
 
 #define UDP_PORT 1234
-#define SERVICE_ID 1 
+#define SERVICE_ID 1
 
 /*SERVICE ID FOR SYNC NODE IS 1*/
 
@@ -149,7 +149,7 @@ void send_command(uint8_t SERVICE_ID)
 PROCESS_THREAD(communications_process, ev, data)
 {
 
-  uip_ipaddr_t addr;
+  uip_ipaddr_t *addr;
 
   PROCESS_BEGIN();
 
