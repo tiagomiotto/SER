@@ -50,7 +50,6 @@
 #define SERVICE_ID 1
 
 /*SERVICE ID FOR SYNC NODE IS 1*/
-
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
 static struct simple_udp_connection broadcast_connection;
@@ -149,8 +148,8 @@ void send_command(uint8_t SERVICE_ID)
 PROCESS_THREAD(communications_process, ev, data)
 {
 
-  uip_ipaddr_t *addr;
-
+  uip_ipaddr_t addr;
+  uip_ipaddr_t *ipaddr;
   PROCESS_BEGIN();
 
   simple_udp_register(&broadcast_connection, UDP_PORT,
@@ -159,11 +158,11 @@ PROCESS_THREAD(communications_process, ev, data)
 
   servreg_hack_init();
 
-  addr = set_global_address();
+  ipaddr = set_global_address();
 
-  create_rpl_dag(addr);
+  create_rpl_dag(ipaddr);
 
-  servreg_hack_register(SERVICE_ID, addr);
+  servreg_hack_register(SERVICE_ID, ipaddr);
 
   while (1)
   {
