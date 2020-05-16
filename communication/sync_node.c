@@ -47,7 +47,7 @@
 #include <string.h>
 
 #define UDP_PORT 1234
-#define SERVICE_ID 1 //SERVICE ID FOR SYNC NODE IS 1
+#define SERVICE_ID 1 /*SERVICE ID FOR SYNC NODE IS 1*/
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
