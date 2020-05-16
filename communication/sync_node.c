@@ -128,6 +128,8 @@ void send_command(uint8_t SERVICE_ID)
 {
   uip_ipaddr_t *addr;
   addr = servreg_hack_lookup(SERVICE_ID);
+
+  
   if (addr != NULL)
   {
     static unsigned int message_number;
@@ -250,9 +252,10 @@ void search_list()
        item = list_item_next(item))
   {
     printf("Id %d address ", servreg_hack_item_id(item));
-    send_command(servreg_hack_item_id(item));
+  
     uip_debug_ipaddr_print(servreg_hack_item_address(item));
     printf("\n");
+     send_command(servreg_hack_item_id(item));
   }
 }
 PROCESS_THREAD(available_nodes_proccess, ev, data)
