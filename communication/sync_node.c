@@ -164,6 +164,7 @@ PROCESS_THREAD(test_serial, ev, data)
 /*---------------------------------------------------------------------------*/
 void search_list()
 {
+  servreg_hack_item_t *item;
       for(item = servreg_hack_list_head();
           item != NULL;
           item = list_item_next(item)) {
@@ -177,7 +178,7 @@ void search_list()
 PROCESS_THREAD(available_nodes_proccess, ev, data)
 {
   static struct etimer periodic_timer;
-  servreg_hack_item_t *nodeList;
+  //servreg_hack_item_t *nodeList;
   PROCESS_BEGIN();
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
