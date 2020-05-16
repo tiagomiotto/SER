@@ -191,7 +191,7 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
     
     printf("Check nodes \n");
     //printf("Node %d\n", servreg_hack_item_id(nodeList));
-    search_list(nodeList);
+    search_list();
   }
 
   PROCESS_END();
