@@ -123,9 +123,10 @@ static void create_rpl_dag(uip_ipaddr_t *ipaddr)
   }
 }
 
+
 void send_command(uint8_t SERVICE_ID)
 {
-
+  uip_ipaddr_t addr;
   addr = servreg_hack_lookup(SERVICE_ID);
   if (addr != NULL)
   {
