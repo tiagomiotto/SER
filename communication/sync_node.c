@@ -138,7 +138,7 @@ void send_command(uint8_t SERVICE_ID)
     printf("\n");
     sprintf(buf, "Message %d", message_number);
     message_number++;
-    simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
+    simple_udp_sendto(&broadcast_connection, buf, strlen(buf) + 1, addr);
   }
   else
   {
