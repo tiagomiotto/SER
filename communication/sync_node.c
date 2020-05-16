@@ -46,21 +46,21 @@
 #include <string.h>
 
 #define UDP_PORT 1234
+#define SERVICE_ID 1 //SERVICE ID FOR SYNC NODE IS 1
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
-#define SEND_TIME (random_rand() % (SEND_INTERVAL))
 
 static struct simple_udp_connection broadcast_connection;
 
 /*---------------------------------------------------------------------------*/
-PROCESS(broadcast_example_process, "UDP broadcast example process");
+PROCESS(communications_process, "UDP broadcast example process");
 PROCESS(handler_process, "Serial message handler process");
-PROCESS(test_serial, "Serial line test process");
+PROCESS(serial_process, "Serial line test process");
 PROCESS(available_nodes_proccess, "Network size check periodic process");
 
-AUTOSTART_PROCESSES(&test_serial, &handler_process, &available_nodes_proccess);
+AUTOSTART_PROCESSES(&communications_process, &serial_process, &handler_process, &available_nodes_proccess);
 
-/*---------------------------------------------------------------------------*/
+/*--------------------Communications---------------------------------*/
 static void
 receiver(struct simple_udp_connection *c,
          const uip_ipaddr_t *sender_addr,
@@ -73,8 +73,77 @@ receiver(struct simple_udp_connection *c,
   printf("Data received on port %d from port %d with length %d : %s\n",
          receiver_port, sender_port, datalen, (char *)data);
 }
+
+set_global_address(void)
+{
+  static uip_ipaddr_t ipaddr;
+  int i;
+  uint8_t state;
+
+  uip_ip6addr(&ipaddr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
+  uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
+  uip_ds6_addr_add(&ipaddr, 0, ADDR_AUTOCONF);
+
+  printf("IPv6 addresses: ");
+  for (i = 0; i < UIP_DS6_ADDR_NB; i++)
+  {
+    state = uip_ds6_if.addr_list[i].state;
+    if (uip_ds6_if.addr_list[i].isused &&
+        (state == ADDR_TENTATIVE || state == ADDR_PREFERRED))
+    {
+      uip_debug_ipaddr_print(&uip_ds6_if.addr_list[i].ipaddr);
+      printf("\n");
+    }
+  }
+
+  return &ipaddr;
+}
+
+static void create_rpl_dag(uip_ipaddr_t *ipaddr)
+{
+  struct uip_ds6_addr *root_if;
+
+  root_if = uip_ds6_addr_lookup(ipaddr);
+  if (root_if != NULL)
+  {
+    rpl_dag_t *dag;
+    uip_ipaddr_t prefix;
+
+    rpl_set_root(RPL_DEFAULT_INSTANCE, ipaddr);
+    dag = rpl_get_any_dag();
+    uip_ip6addr(&prefix, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
+    rpl_set_prefix(dag, &prefix, 64);
+    PRINTF("created a new RPL dag\n");
+  }
+  else
+  {
+    PRINTF("failed to create a new RPL DAG\n");
+  }
+}
+
+void send_command(uint8_t SERVICE_ID)
+{
+
+  addr = servreg_hack_lookup(SERVICE_ID);
+  if (addr != NULL)
+  {
+    static unsigned int message_number;
+    char buf[20];
+
+    printf("Sending unicast to ");
+    uip_debug_ipaddr_print(addr);
+    printf("\n");
+    sprintf(buf, "Message %d", message_number);
+    message_number++;
+    simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
+  }
+  else
+  {
+    printf("Service %d not found\n", SERVICE_ID);
+  }
+}
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(broadcast_example_process, ev, data)
+PROCESS_THREAD(communications_process, ev, data)
 {
 
   uip_ipaddr_t addr;
@@ -84,6 +153,14 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
   simple_udp_register(&broadcast_connection, UDP_PORT,
                       NULL, UDP_PORT,
                       receiver);
+
+  servreg_hack_init();
+
+  ipaddr = set_global_address();
+
+  create_rpl_dag(ipaddr);
+
+  servreg_hack_register(SERVICE_ID, ipaddr);
 
   while (1)
   {
@@ -98,6 +175,7 @@ PROCESS_THREAD(broadcast_example_process, ev, data)
   PROCESS_END();
 }
 
+/*----------------------------SERIAL HANDLING----------------------------------*/
 PROCESS_THREAD(handler_process, ev, data)
 {
 
@@ -145,10 +223,9 @@ PROCESS_THREAD(handler_process, ev, data)
   }
 
   PROCESS_END();
-  //servreg_hack_item_t *servreg_hack_list_head(void);
 }
 
-PROCESS_THREAD(test_serial, ev, data)
+PROCESS_THREAD(serial_process, ev, data)
 {
   PROCESS_BEGIN();
   printf("Use info to get the state of the network or command to send commands\n");
@@ -161,24 +238,23 @@ PROCESS_THREAD(test_serial, ev, data)
   PROCESS_END();
 }
 
-
-/*---------------------------------------------------------------------------*/
+/*-----------------------------NODE CHECK----------------------------*/
 void search_list()
 {
   servreg_hack_item_t *item;
-      for(item = servreg_hack_list_head();
-          item != NULL;
-          item = list_item_next(item)) {
-        printf("Id %d address ", servreg_hack_item_id(item));
-        uip_debug_ipaddr_print(servreg_hack_item_address(item));
-        printf("\n");
-      }
-    
+  for (item = servreg_hack_list_head();
+       item != NULL;
+       item = list_item_next(item))
+  {
+    printf("Id %d address ", servreg_hack_item_id(item));
+    send_command(servreg_hack_item_id(item));
+    uip_debug_ipaddr_print(servreg_hack_item_address(item));
+    printf("\n");
+  }
 }
 PROCESS_THREAD(available_nodes_proccess, ev, data)
 {
   static struct etimer periodic_timer;
-  //servreg_hack_item_t *nodeList;
   PROCESS_BEGIN();
   servreg_hack_init();
 
@@ -187,11 +263,9 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
   {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
-    
-    //nodeList=servreg_hack_list_head();
-    
+
     printf("Check nodes \n");
-    //printf("Node %d\n", servreg_hack_item_id(nodeList));
+
     search_list();
   }
 
