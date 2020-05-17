@@ -330,7 +330,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     }
     else
     {
-      printf("Service %d not found\n", *id);
+      printf("Service %d not found\n", my_messageRX->id);
     }
   }
 
