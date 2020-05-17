@@ -294,9 +294,9 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   
   ipaddr = set_global_address();
 
-  create_rpl_dag(ipaddr);
+  //create_rpl_dag(ipaddr); //Isso que esta a dar merda e repetir
 
-  // servreg_hack_register(ID, ipaddr);
+  servreg_hack_register(ID, ipaddr);
 
   simple_udp_register(&unicast_connection, UDP_PORT,
                       NULL, UDP_PORT, receiver);
