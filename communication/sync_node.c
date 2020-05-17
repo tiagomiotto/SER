@@ -305,8 +305,8 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
   set_global_address();
 
-  simple_udp_register(&unicast_connection, UNICAST_PORT,
-                      NULL, UNICAST_PORT, receiver);
+  simple_udp_register(&unicast_connection, UDP_PORT,
+                      NULL, UDP_PORT, receiver);
 
 
 
