@@ -255,7 +255,9 @@ void search_list()
   
     uip_debug_ipaddr_print(servreg_hack_item_address(item));
     printf("\n");
-     send_command(servreg_hack_item_id(item));
+    send_command(servreg_hack_item_id(item));
+    process_post(&communications_process,
+                 PROCESS_EVENT_CONTINUE, data);
   }
 }
 PROCESS_THREAD(available_nodes_proccess, ev, data)
