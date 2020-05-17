@@ -287,7 +287,6 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
 PROCESS_THREAD(unicast_sender_process, ev, data)
 {
   uip_ipaddr_t *addr;
-
   uip_ipaddr_t *ipaddr;
   PROCESS_BEGIN();
 
@@ -295,13 +294,12 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   
   ipaddr = set_global_address();
 
-  create_rpl_dag(ipaddr);
+  // create_rpl_dag(ipaddr);
 
-  servreg_hack_register(ID, ipaddr);
+  // servreg_hack_register(ID, ipaddr);
 
   simple_udp_register(&unicast_connection, UDP_PORT,
                       NULL, UDP_PORT, receiver);
-
 
 
   while (1)
