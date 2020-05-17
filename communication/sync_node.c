@@ -167,8 +167,7 @@ PROCESS_THREAD(communications_process, ev, data)
                       NULL, UDP_PORT,
                       receiver);
 
-  simple_udp_register(&unicast_connection, UNICAST_PORT,
-                      NULL, UNICAST_PORT, receiver);
+
 
   servreg_hack_init();
 
