@@ -260,7 +260,7 @@ void search_list()
     uip_debug_ipaddr_print(servreg_hack_item_address(item));
     printf("\n");
     //send_command(servreg_hack_item_id(item));
-    process_post(&unicast_sender_proccess,
+    process_post(&unicast_sender_process,
                  PROCESS_EVENT_CONTINUE, servreg_hack_item_id(item));
   }
 }
@@ -317,7 +317,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
       message_number++;
       simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
     } else {
-      printf("Service %d not found\n", SERVICE_ID);
+      printf("Service %d not found\n", *id);
     }
   }
 
