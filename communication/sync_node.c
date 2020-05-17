@@ -266,7 +266,7 @@ void search_list()
 
     uip_debug_ipaddr_print(servreg_hack_item_address(item));
     printf("\n");
-    send_command(servreg_hack_item_id(item), "Hi There");
+    send_command("Hi There",servreg_hack_item_id(item));
 
   }
 }
