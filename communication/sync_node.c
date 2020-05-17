@@ -64,6 +64,8 @@ struct message
 
 struct message my_message;
 
+void search_list();
+
 /*---------------------------------------------------------------------------*/
 PROCESS(communications_process, "UDP broadcast example process");
 PROCESS(handler_process, "Serial message handler process");
@@ -204,16 +206,12 @@ PROCESS_THREAD(handler_process, ev, data)
     }
     else if (strcmp(msg, "command") == 0)
     {
-      printf("The current nodes are ");
-      for (i = 0; i < 4; i++)
-      {
-        printf("%d, ", i);
-      }
-      printf("select on/off followed by the number of the node\n");
+      printf("Select one node to send commands: ");
+      search_list();
     }
     else
     {
-      printf("Invalid option, use info to get the state of the networrk or command to send commands\n");
+      printf("Invalid option, use info to get the state of the network or command to send commands\n");
       continue;
     }
 
@@ -255,11 +253,12 @@ void search_list()
        item != NULL;
        item = list_item_next(item))
   {
-    printf("Id %d address ", servreg_hack_item_id(item));
-
-    uip_debug_ipaddr_print(servreg_hack_item_address(item));
-    printf("\n");
-    send_command("Hi There",servreg_hack_item_id(item));
+    if(list_item_next(item)!= NULL)
+    printf("%d, ", servreg_hack_item_id(item));
+    else
+    printf("%d\n",servreg_hack_item_id(item));
+    // uip_debug_ipaddr_print(servreg_hack_item_address(item));
+    //send_command("Hi There",servreg_hack_item_id(item));
 
   }
 }
