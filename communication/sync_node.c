@@ -134,7 +134,7 @@ static void create_rpl_dag(uip_ipaddr_t *ipaddr)
   }
 }
 
-void send_command(uint8_t SERVICE_ID)
+void send_command(char* messageTX, uint8_t SERVICE_ID)
 {
   uip_ipaddr_t *addr;
 
@@ -142,12 +142,10 @@ void send_command(uint8_t SERVICE_ID)
 
   if (addr != NULL)
   {
-    char buf[20];
-
     printf("Sending unicast to ");
     uip_debug_ipaddr_print(addr);
     printf("\n");
-    sprintf(my_message.msg, "Message");
+    strcpy(my_message.msg, messageTX);
     my_message.id=SERVICE_ID;
     process_post(&unicast_sender_process,
                  PROCESS_EVENT_CONTINUE, &my_message);
@@ -268,9 +266,8 @@ void search_list()
 
     uip_debug_ipaddr_print(servreg_hack_item_address(item));
     printf("\n");
-    send_command(servreg_hack_item_id(item));
-    //process_post(&unicast_sender_process,
-    //PROCESS_EVENT_CONTINUE, servreg_hack_item_id(item));
+    send_command(servreg_hack_item_id(item), "Hi There");
+
   }
 }
 PROCESS_THREAD(available_nodes_proccess, ev, data)
