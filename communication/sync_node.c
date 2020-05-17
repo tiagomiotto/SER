@@ -61,7 +61,7 @@ PROCESS(communications_process, "UDP broadcast example process");
 PROCESS(handler_process, "Serial message handler process");
 PROCESS(serial_process, "Serial line test process");
 PROCESS(available_nodes_proccess, "Network size check periodic process");
-PROCESS(unicast_sender_process), "Network size check periodic process");
+PROCESS(unicast_sender_process, "Network size check periodic process");
 
 AUTOSTART_PROCESSES( &unciast_sender_proccess,&serial_process, &handler_process, &available_nodes_proccess);
 
