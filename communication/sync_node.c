@@ -56,6 +56,14 @@
 static struct simple_udp_connection broadcast_connection;
 static struct simple_udp_connection unicast_connection;
 
+struct message
+{
+  char msg[50];
+  int id;
+};
+
+struct message my_message;
+
 /*---------------------------------------------------------------------------*/
 PROCESS(communications_process, "UDP broadcast example process");
 PROCESS(handler_process, "Serial message handler process");
@@ -63,7 +71,7 @@ PROCESS(serial_process, "Serial line test process");
 PROCESS(available_nodes_proccess, "Network size check periodic process");
 PROCESS(unicast_sender_process, "Network size check periodic process");
 
-AUTOSTART_PROCESSES(&unicast_sender_process,&serial_process, &handler_process, &available_nodes_proccess);
+AUTOSTART_PROCESSES(&unicast_sender_process, &serial_process, &handler_process, &available_nodes_proccess);
 
 /*--------------------Communications---------------------------------*/
 static void
@@ -129,19 +137,20 @@ static void create_rpl_dag(uip_ipaddr_t *ipaddr)
 void send_command(uint8_t SERVICE_ID)
 {
   uip_ipaddr_t *addr;
+
   addr = servreg_hack_lookup(SERVICE_ID);
 
   if (addr != NULL)
   {
-    static unsigned int message_number;
     char buf[20];
 
     printf("Sending unicast to ");
     uip_debug_ipaddr_print(addr);
     printf("\n");
-    sprintf(buf, "Message %d", message_number);
-    message_number++;
-    simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
+    sprintf(my_message.msg, "Message %d", message_number);
+    my_message.id=SERVICE_ID;
+    process_post(&unicast_sender_process,
+                 PROCESS_EVENT_CONTINUE, &my_message);
   }
   else
   {
@@ -259,9 +268,9 @@ void search_list()
 
     uip_debug_ipaddr_print(servreg_hack_item_address(item));
     printf("\n");
-    //send_command(servreg_hack_item_id(item));
-    process_post(&unicast_sender_process,
-                 PROCESS_EVENT_CONTINUE, servreg_hack_item_id(item));
+    send_command(servreg_hack_item_id(item));
+    //process_post(&unicast_sender_process,
+    //PROCESS_EVENT_CONTINUE, servreg_hack_item_id(item));
   }
 }
 PROCESS_THREAD(available_nodes_proccess, ev, data)
@@ -299,24 +308,28 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   simple_udp_register(&unicast_connection, UNICAST_PORT,
                       NULL, UNICAST_PORT, receiver);
 
-  int *id;
 
-  while(1) {
+
+  while (1)
+  {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
 
-    id = (int *) data;
-    addr = servreg_hack_lookup(*id);
-    if(addr != NULL) {
-      static unsigned int message_number;
+    struct message *my_messageRX = data;
+    addr = servreg_hack_lookup(my_messageRX->id);
+    if (addr != NULL)
+    {
+
       char buf[20];
 
       printf("Sending unicast to ");
       uip_debug_ipaddr_print(addr);
       printf("\n");
-      sprintf(buf, "Message %d", message_number);
-      message_number++;
+      sprintf(buf, my_messageRX->msg);
+
       simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
-    } else {
+    }
+    else
+    {
       printf("Service %d not found\n", *id);
     }
   }
