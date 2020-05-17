@@ -48,11 +48,13 @@
 
 /*SERVICE ID FOR SYNC NODE IS 1*/
 #define UDP_PORT 1234
+#define UNICAST_PORT 1235
 #define ID 1
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
 static struct simple_udp_connection broadcast_connection;
+static struct simple_udp_connection unicast_connection;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(communications_process, "UDP broadcast example process");
@@ -123,13 +125,11 @@ static void create_rpl_dag(uip_ipaddr_t *ipaddr)
   }
 }
 
-
 void send_command(uint8_t SERVICE_ID)
 {
   uip_ipaddr_t *addr;
   addr = servreg_hack_lookup(SERVICE_ID);
 
-  
   if (addr != NULL)
   {
     static unsigned int message_number;
@@ -140,7 +140,7 @@ void send_command(uint8_t SERVICE_ID)
     printf("\n");
     sprintf(buf, "Message %d", message_number);
     message_number++;
-    simple_udp_sendto(&broadcast_connection, buf, strlen(buf) + 1, addr);
+    simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
   }
   else
   {
@@ -158,6 +158,9 @@ PROCESS_THREAD(communications_process, ev, data)
   simple_udp_register(&broadcast_connection, UDP_PORT,
                       NULL, UDP_PORT,
                       receiver);
+
+  simple_udp_register(&unicast_connection, UNICAST_PORT,
+                      NULL, UNICAST_PORT, receiver);
 
   servreg_hack_init();
 
@@ -252,7 +255,7 @@ void search_list()
        item = list_item_next(item))
   {
     printf("Id %d address ", servreg_hack_item_id(item));
-  
+
     uip_debug_ipaddr_print(servreg_hack_item_address(item));
     printf("\n");
     send_command(servreg_hack_item_id(item));
@@ -264,7 +267,7 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
 {
   static struct etimer periodic_timer;
   PROCESS_BEGIN();
-  servreg_hack_init();
+  //servreg_hack_init();
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
   while (1)
