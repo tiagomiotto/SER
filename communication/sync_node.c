@@ -147,7 +147,7 @@ void send_command(uint8_t SERVICE_ID)
     printf("Sending unicast to ");
     uip_debug_ipaddr_print(addr);
     printf("\n");
-    sprintf(my_message.msg, "Message %d", message_number);
+    sprintf(my_message.msg, "Message");
     my_message.id=SERVICE_ID;
     process_post(&unicast_sender_process,
                  PROCESS_EVENT_CONTINUE, &my_message);
