@@ -61,8 +61,9 @@ PROCESS(communications_process, "UDP broadcast example process");
 PROCESS(handler_process, "Serial message handler process");
 PROCESS(serial_process, "Serial line test process");
 PROCESS(available_nodes_proccess, "Network size check periodic process");
+PROCESS(unicast_sender_process), "Network size check periodic process");
 
-AUTOSTART_PROCESSES(&communications_process, &serial_process, &handler_process, &available_nodes_proccess);
+AUTOSTART_PROCESSES( &unciast_sender_proccess,&serial_process, &handler_process, &available_nodes_proccess);
 
 /*--------------------Communications---------------------------------*/
 static void
@@ -258,9 +259,9 @@ void search_list()
 
     uip_debug_ipaddr_print(servreg_hack_item_address(item));
     printf("\n");
-    send_command(servreg_hack_item_id(item));
-    process_post(&communications_process,
-                 PROCESS_EVENT_CONTINUE, "data");
+    //send_command(servreg_hack_item_id(item));
+    process_post(&unicast_sender_proccess,
+                 PROCESS_EVENT_CONTINUE, servreg_hack_item_id(item));
   }
 }
 PROCESS_THREAD(available_nodes_proccess, ev, data)
@@ -284,3 +285,41 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
 }
 
 /*---------------------------------------------------------------------------*/
+
+PROCESS_THREAD(unicast_sender_process, ev, data)
+{
+  uip_ipaddr_t *addr;
+
+  PROCESS_BEGIN();
+
+  servreg_hack_init();
+
+  set_global_address();
+
+  simple_udp_register(&unicast_connection, UNICAST_PORT,
+                      NULL, UNICAST_PORT, receiver);
+
+  int *id;
+
+  while(1) {
+    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
+
+    id = (int *) data;
+    addr = servreg_hack_lookup(*id);
+    if(addr != NULL) {
+      static unsigned int message_number;
+      char buf[20];
+
+      printf("Sending unicast to ");
+      uip_debug_ipaddr_print(addr);
+      printf("\n");
+      sprintf(buf, "Message %d", message_number);
+      message_number++;
+      simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
+    } else {
+      printf("Service %d not found\n", SERVICE_ID);
+    }
+  }
+
+  PROCESS_END();
+}
