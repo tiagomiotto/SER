@@ -71,7 +71,7 @@ PROCESS(serial_process, "Serial line test process");
 PROCESS(available_nodes_proccess, "Network size check periodic process");
 PROCESS(unicast_sender_process, "Network size check periodic process");
 
-AUTOSTART_PROCESSES(&unicast_sender_process, &serial_process, &handler_process, &available_nodes_proccess);
+AUTOSTART_PROCESSES(&communications_process, &unicast_sender_process, &serial_process, &handler_process, &available_nodes_proccess);
 
 /*--------------------Communications---------------------------------*/
 static void
@@ -274,7 +274,6 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
 {
   static struct etimer periodic_timer;
   PROCESS_BEGIN();
-  //servreg_hack_init();
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
   while (1)
@@ -290,7 +289,7 @@ PROCESS_THREAD(available_nodes_proccess, ev, data)
   PROCESS_END();
 }
 
-/*---------------------------------------------------------------------------*/
+/*-------------------------Unicast Sender Proccess--------------------------------*/
 
 PROCESS_THREAD(unicast_sender_process, ev, data)
 {
