@@ -65,12 +65,13 @@ struct message
 struct message my_message;
 
 /*---------------------------------------------------------------------------*/
+PROCESS(communications_process, "UDP broadcast example process");
 PROCESS(handler_process, "Serial message handler process");
 PROCESS(serial_process, "Serial line test process");
 PROCESS(available_nodes_proccess, "Network size check periodic process");
 PROCESS(unicast_sender_process, "Network size check periodic process");
 
-AUTOSTART_PROCESSES(&unicast_sender_process, &serial_process, &handler_process, &available_nodes_proccess);
+AUTOSTART_PROCESSES( &unicast_sender_process, &serial_process, &handler_process, &available_nodes_proccess);
 
 /*--------------------Communications---------------------------------*/
 static void
@@ -291,7 +292,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   PROCESS_BEGIN();
 
   servreg_hack_init();
-
+  
   ipaddr = set_global_address();
 
   create_rpl_dag(ipaddr);
