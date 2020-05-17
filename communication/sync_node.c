@@ -257,7 +257,7 @@ void search_list()
     printf("\n");
     send_command(servreg_hack_item_id(item));
     process_post(&communications_process,
-                 PROCESS_EVENT_CONTINUE, data);
+                 PROCESS_EVENT_CONTINUE, "data");
   }
 }
 PROCESS_THREAD(available_nodes_proccess, ev, data)
