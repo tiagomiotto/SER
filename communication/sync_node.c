@@ -63,7 +63,7 @@ PROCESS(serial_process, "Serial line test process");
 PROCESS(available_nodes_proccess, "Network size check periodic process");
 PROCESS(unicast_sender_process, "Network size check periodic process");
 
-AUTOSTART_PROCESSES( &unciast_sender_proccess,&serial_process, &handler_process, &available_nodes_proccess);
+AUTOSTART_PROCESSES(&unicast_sender_process,&serial_process, &handler_process, &available_nodes_proccess);
 
 /*--------------------Communications---------------------------------*/
 static void
