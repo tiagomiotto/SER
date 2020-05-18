@@ -210,7 +210,7 @@ PROCESS_THREAD(handler_process, ev, data)
     {
       printf("Current nodes: ");
       search_list();
-      printf("Send the on/off command in the following form: node_number,on");
+      printf("Send the on/off command in the following form: node_number,on\n");
     }
     else
     {
