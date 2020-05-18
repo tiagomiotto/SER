@@ -191,6 +191,7 @@ PROCESS_THREAD(handler_process, ev, data)
 {
 
   int i = 0;
+  
   PROCESS_BEGIN();
 
   while (1)
@@ -208,10 +209,29 @@ PROCESS_THREAD(handler_process, ev, data)
     {
       printf("Select one node to send commands: ");
       search_list();
+      printf("Send the on/off command in the following form: on,node_number")
     }
     else
     {
       printf("Invalid option, use info to get the state of the network or command to send commands\n");
+      continue;
+    }
+
+    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
+    msg = (char *)data;
+    char *token = strtok(msg, ",");
+    int id = atoi(token);
+    token = strtok(NULL,",");
+    
+
+    printf("%d/%s\n", id, token);
+    if (strcmp(msg, "c") == 0)
+      printf("it works1 %s \n", (char *)msg);
+    else if (strcmp(msg, "d") == 0)
+      printf("it works2 %s \n", (char *)msg);
+    else
+    {
+      printf("Invalid option\n");
       continue;
     }
 
