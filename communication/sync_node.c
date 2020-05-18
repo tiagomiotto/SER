@@ -215,8 +215,10 @@ PROCESS_THREAD(handler_process, ev, data)
     token = strtok(NULL,",");
     
 
-    send_command(token,id);
-    printf("Sent %d:%s\n", id, token);
+    if(strcmp(token,"on") || strcmp(token,"off"){
+      send_command(token,id);
+    printf("Sent %d:%s\n", id, token);}
+    else printf("Invalid command\n")
     // if (strcmp(msg, "c") == 0)
     //   printf("it works1 %s \n", (char *)msg);
     // else if (strcmp(msg, "d") == 0)
