@@ -262,7 +262,7 @@ PROCESS_THREAD(serial_process, ev, data)
   for (;;)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
-    process_post(&handler_process,
+    process_post_synch(&handler_process,
                  PROCESS_EVENT_CONTINUE, data);
   }
   PROCESS_END();
