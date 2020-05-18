@@ -44,6 +44,7 @@
 #include "net/rpl/rpl.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /*SERVICE ID FOR SYNC NODE IS 1*/
@@ -209,7 +210,7 @@ PROCESS_THREAD(handler_process, ev, data)
     {
       printf("Select one node to send commands: ");
       search_list();
-      printf("Send the on/off command in the following form: on,node_number")
+      printf("Send the on/off command in the following form: on,node_number");
     }
     else
     {
@@ -220,7 +221,8 @@ PROCESS_THREAD(handler_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
     msg = (char *)data;
     char *token = strtok(msg, ",");
-    int id = atoi(token);
+    char *pEnd;
+    int id = strtol(token, &pEnd, 10);
     token = strtok(NULL,",");
     
 
