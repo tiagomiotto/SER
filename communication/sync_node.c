@@ -159,33 +159,33 @@ void send_command(char* messageTX, uint8_t SERVICE_ID)
   }
 }
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(communications_process, ev, data)
-{
+// PROCESS_THREAD(communications_process, ev, data)
+// {
 
-  uip_ipaddr_t addr;
-  uip_ipaddr_t *ipaddr;
-  PROCESS_BEGIN();
+//   uip_ipaddr_t addr;
+//   uip_ipaddr_t *ipaddr;
+//   PROCESS_BEGIN();
 
-  servreg_hack_init();
+//   servreg_hack_init();
 
-  ipaddr = set_global_address();
+//   ipaddr = set_global_address();
 
-  create_rpl_dag(ipaddr);
+//   create_rpl_dag(ipaddr);
 
-  servreg_hack_register(ID, ipaddr);
+//   servreg_hack_register(ID, ipaddr);
 
-  while (1)
-  {
-    PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
-    char *msg = (char *)data;
+//   while (1)
+//   {
+//     PROCESS_WAIT_EVENT_UNTIL(ev = PROCESS_EVENT_CONTINUE);
+//     char *msg = (char *)data;
 
-    printf("Sending broadcast %s\n", msg);
-    uip_create_linklocal_allnodes_mcast(&addr);
-    simple_udp_sendto(&broadcast_connection, msg, 5, &addr);
-  }
+//     printf("Sending broadcast %s\n", msg);
+//     uip_create_linklocal_allnodes_mcast(&addr);
+//     simple_udp_sendto(&broadcast_connection, msg, 5, &addr);
+//   }
 
-  PROCESS_END();
-}
+//   PROCESS_END();
+// }
 
 /*----------------------------SERIAL HANDLING----------------------------------*/
 PROCESS_THREAD(handler_process, ev, data)
@@ -284,24 +284,24 @@ void search_list()
 
   }
 }
-PROCESS_THREAD(available_nodes_proccess, ev, data)
-{
-  static struct etimer periodic_timer;
-  PROCESS_BEGIN();
+// PROCESS_THREAD(available_nodes_proccess, ev, data)
+// {
+//   static struct etimer periodic_timer;
+//   PROCESS_BEGIN();
 
-  etimer_set(&periodic_timer, SEND_INTERVAL);
-  while (1)
-  {
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-    etimer_reset(&periodic_timer);
+//   etimer_set(&periodic_timer, SEND_INTERVAL);
+//   while (1)
+//   {
+//     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+//     etimer_reset(&periodic_timer);
 
-    printf("Check nodes \n");
+//     printf("Check nodes \n");
 
-    search_list();
-  }
+//     search_list();
+//   }
 
-  PROCESS_END();
-}
+//   PROCESS_END();
+// }
 
 /*-------------------------Unicast Sender Proccess--------------------------------*/
 
@@ -315,7 +315,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   
   ipaddr = set_global_address();
 
-  //create_rpl_dag(ipaddr); //Isso que esta a dar merda e repetir
+  //create_rpl_dag(ipaddr); //Isso que esta a dar problema e repetir mensagens INVESTIGAR
 
   servreg_hack_register(ID, ipaddr);
 
