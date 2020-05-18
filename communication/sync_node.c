@@ -208,9 +208,9 @@ PROCESS_THREAD(handler_process, ev, data)
     }
     else if (strcmp(msg, "command") == 0)
     {
-      printf("Select one node to send commands: ");
+      printf("Current nodes: ");
       search_list();
-      printf("Send the on/off command in the following form: on,node_number");
+      printf("Send the on/off command in the following form: node_number,on");
     }
     else
     {
