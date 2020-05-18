@@ -150,7 +150,7 @@ void send_command(char* messageTX, uint8_t SERVICE_ID)
     printf("\n");
     strcpy(my_message.msg, messageTX);
     my_message.id=SERVICE_ID;
-    process_post(&unicast_sender_process,
+    process_post_sync(&unicast_sender_process,
                  PROCESS_EVENT_CONTINUE, &my_message);
   }
   else
@@ -326,7 +326,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
   while (1)
   {
-    PROCESS_WAIT_EVENT_UNTIL(ev);
+    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
 
     struct message *my_messageRX = data;
     addr = servreg_hack_lookup(my_messageRX->id);
