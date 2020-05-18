@@ -326,7 +326,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
   while (1)
   {
-    PROCESS_WAIT_EVENT();
+    PROCESS_WAIT_EVENT_UNTIL(ev);
 
     struct message *my_messageRX = data;
     addr = servreg_hack_lookup(my_messageRX->id);
