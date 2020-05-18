@@ -139,24 +139,13 @@ static void create_rpl_dag(uip_ipaddr_t *ipaddr)
 
 void send_command(char* messageTX, uint8_t SERVICE_ID)
 {
-  uip_ipaddr_t *addr;
 
-  addr = servreg_hack_lookup(SERVICE_ID);
-
-  if (addr != NULL)
-  {
-    printf("Sending unicast to ");
-    uip_debug_ipaddr_print(addr);
-    printf("\n");
     strcpy(my_message.msg, messageTX);
     my_message.id=SERVICE_ID;
     process_post(&unicast_sender_process,
                  PROCESS_EVENT_CONTINUE, &my_message);
-  }
-  else
-  {
-    printf("Service %d not found\n", SERVICE_ID);
-  }
+  
+
 }
 /*---------------------------------------------------------------------------*/
 // PROCESS_THREAD(communications_process, ev, data)
