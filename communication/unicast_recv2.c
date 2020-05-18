@@ -71,14 +71,7 @@ receiver(struct simple_udp_connection *c,
   uip_debug_ipaddr_print(sender_addr);
   printf(" on port %d from port %d with length %d: '%s'\n",
          receiver_port, sender_port, datalen, data);
-    char buf[20];
 
-      printf("Sending unicast to ");
-      uip_debug_ipaddr_print(sender_addr);
-      printf("\n");
-      sprintf(buf, "Message %d", 1);
-      
-      simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, sender_addr);
 }
 /*---------------------------------------------------------------------------*/
 static uip_ipaddr_t *
