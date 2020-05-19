@@ -326,14 +326,10 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     if (addr != NULL)
     {
 
-      char buf[sizeof(struct message)];
 
-      //memcpy(buf, &my_messageRX, sizeof(my_messageRX));
       printf("Sending unicast to ");
       uip_debug_ipaddr_print(addr);
       printf("\n");
-      printf("%s",buf);
-
       simple_udp_sendto(&unicast_connection, &my_message, sizeof(struct message) + 1, addr);
     }
     else
