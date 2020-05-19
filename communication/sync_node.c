@@ -209,6 +209,7 @@ PROCESS_THREAD(handler_process, ev, data)
     }
 
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
+    //Verificar aqui, se madno uma coisa que não é um numero ele morre
     msg = (char *)data;
     char *token = strtok(msg, ",");
     char *pEnd;
@@ -325,12 +326,12 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     if (addr != NULL)
     {
 
-      char buf[20];
+      char buf[sizeof(struct message)];
 
+      memcpy(buf, &my_messageRX, sizeof my_messageRX);
       printf("Sending unicast to ");
       uip_debug_ipaddr_print(addr);
       printf("\n");
-      sprintf(buf, my_messageRX);
       printf("%s",buf);
 
       simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
