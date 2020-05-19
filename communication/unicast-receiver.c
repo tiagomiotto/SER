@@ -54,6 +54,14 @@
 
 static struct simple_udp_connection unicast_connection;
 
+struct message
+{
+  char msg[50];
+  int id;
+};
+
+struct message my_message;
+
 /*---------------------------------------------------------------------------*/
 PROCESS(unicast_receiver_process, "Unicast receiver example process");
 AUTOSTART_PROCESSES(&unicast_receiver_process);
@@ -69,8 +77,12 @@ receiver(struct simple_udp_connection *c,
 {
   printf("Data received from ");
   uip_debug_ipaddr_print(sender_addr);
+        
+
+      memcpy(my_message, &data, sizeof data);
+      printf("Sending unicast to ");
   printf(" on port %d from port %d with length %d: '%s'\n",
-         receiver_port, sender_port, datalen, data);
+         receiver_port, sender_port, datalen, my_message.msg);
 }
 /*---------------------------------------------------------------------------*/
 static uip_ipaddr_t *
