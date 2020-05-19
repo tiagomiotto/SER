@@ -186,6 +186,7 @@ PROCESS_THREAD(handler_process, ev, data)
 
   while (1)
   {
+      printf("Use info to get the state of the network or command to send commands\n");
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
 
     char *msg = (char *)data;
@@ -249,7 +250,7 @@ PROCESS_THREAD(handler_process, ev, data)
 PROCESS_THREAD(serial_process, ev, data)
 {
   PROCESS_BEGIN();
-  printf("Use info to get the state of the network or command to send commands\n");
+
   for (;;)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
@@ -330,6 +331,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
       uip_debug_ipaddr_print(addr);
       printf("\n");
       sprintf(buf, my_messageRX);
+      printf("%s",buf);
 
       simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
     }
