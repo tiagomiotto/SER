@@ -219,30 +219,9 @@ PROCESS_THREAD(handler_process, ev, data)
 
     if(strcmp(token,"on") ==0|| strcmp(token,"off")==0){
       send_command(token,id);
-    printf("Sent %d:%s\n", id, token);}
+    }
     else printf("Invalid command\n");
-    // if (strcmp(msg, "c") == 0)
-    //   printf("it works1 %s \n", (char *)msg);
-    // else if (strcmp(msg, "d") == 0)
-    //   printf("it works2 %s \n", (char *)msg);
-    // else
-    // {
-    //   printf("Invalid option\n");
-    //   continue;
-    // }
 
-    // PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
-    // msg = (char *)data;
-
-    // if (strcmp(msg, "c") == 0)
-    //   printf("it works1 %s \n", (char *)msg);
-    // else if (strcmp(msg, "d") == 0)
-    //   printf("it works2 %s \n", (char *)msg);
-    // else
-    // {
-    //   printf("Invalid option\n");
-    //   continue;
-    // }
   }
 
   PROCESS_END();
@@ -326,7 +305,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     if (addr != NULL)
     {
 
-
+      my_message.id=ID;
       printf("Sending unicast to ");
       uip_debug_ipaddr_print(addr);
       printf("\n");
