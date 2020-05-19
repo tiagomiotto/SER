@@ -79,7 +79,7 @@ receiver(struct simple_udp_connection *c,
   uip_debug_ipaddr_print(sender_addr);
   //struct message* inMsg;      
 
-      memcpy(&my_message, &data, sizeof data);
+      memcpy(&my_message, &data, sizeof (*data));
       printf("Sending unicast to ");
   printf(" on port %d from port %d with length %d: '%s'\n",
          receiver_port, sender_port, datalen, my_message.msg);
