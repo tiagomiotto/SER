@@ -328,7 +328,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
       char buf[sizeof(struct message)];
 
-      memcpy(buf, &my_messageRX, sizeof my_messageRX);
+      memcpy(buf, &my_messageRX, sizeof(my_messageRX));
       printf("Sending unicast to ");
       uip_debug_ipaddr_print(addr);
       printf("\n");
