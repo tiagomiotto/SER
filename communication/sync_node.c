@@ -329,7 +329,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
       printf("Sending unicast to ");
       uip_debug_ipaddr_print(addr);
       printf("\n");
-      sprintf(buf, my_messageRX->msg);
+      sprintf(buf, my_messageRX);
 
       simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
     }
