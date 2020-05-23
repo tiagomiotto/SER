@@ -251,7 +251,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
 
     struct message *my_messageRX = data;
-    //sendMessage(unicast_connection,my_messageRX);
+    sendMessage(unicast_connection,my_messageRX);
     addr = servreg_hack_lookup(my_messageRX->id);
     if (addr != NULL)
     {
