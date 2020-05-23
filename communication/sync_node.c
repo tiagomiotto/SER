@@ -37,15 +37,15 @@
 #include "net/ip/uip.h"
 #include "net/ipv6/uip-ds6.h"
 #include "net/ip/uip-debug.h"
-#include "servreg-hack.h"
 
-#include "simple-udp.h"
 #include "dev/serial-line.h"
 #include "net/rpl/rpl.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "messaging.h"
 
 /*SERVICE ID FOR SYNC NODE IS 1*/
 #define UDP_PORT 1234
