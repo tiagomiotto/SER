@@ -216,22 +216,20 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   uip_ipaddr_t *ipaddr;
   PROCESS_BEGIN();
 
-  servreg_hack_init();
+  // servreg_hack_init();
   
-  ipaddr = set_global_address();
+  // ipaddr = set_global_address();
 
+  // servreg_hack_register(ID, ipaddr);
 
+  // simple_udp_register(&unicast_connection, UDP_PORT,
+  //                     NULL, UDP_PORT, receiver);
 
-  servreg_hack_register(ID, ipaddr);
-
-  simple_udp_register(&unicast_connection, UDP_PORT,
-                      NULL, UDP_PORT, receiver);
-
+  registerConnection(unicast_connection,UDP_PORT,receiver);
 
   while (1)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
-
     struct Message *my_messageRX = data;
     sendMessage(unicast_connection,my_messageRX);
   }
