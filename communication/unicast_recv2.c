@@ -84,6 +84,8 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
   uip_ipaddr_t *ipaddr;
 
   PROCESS_BEGIN();
+  simple_udp_register(&unicast_connection, UDP_PORT,
+                        NULL, UDP_PORT, receiver);
       printf("Delay max %d\n", DELAY_MAX);
     static struct etimer timer;
     etimer_set(&timer,  DELAY_MAX);
@@ -91,8 +93,7 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
   
   registerConnection(0); //All nodes except the sync must be 0
   
-  simple_udp_register(&unicast_connection, UDP_PORT,
-                        NULL, UDP_PORT, receiver);
+  
   while(1) {
     PROCESS_WAIT_EVENT();
   }
