@@ -114,7 +114,7 @@ uip_ipaddr_t *registerConnection(uint8_t ID)
         create_rpl_dag(ipaddr);
         
     }
-    ID=generateID();    
+    else ID=generateID();    
     printf("My ID is: %d\n", ID);
     servreg_hack_register(ID, ipaddr);
     
