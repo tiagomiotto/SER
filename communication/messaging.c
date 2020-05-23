@@ -85,6 +85,7 @@ uint8_t generateID(){
        item != NULL;
        item = list_item_next(item))
   {
+      printf(" ID is: %d\n", servreg_hack_item_id(item));
     if(list_item_next(item)== NULL)
     if(servreg_hack_item_id(item)!=1) id=servreg_hack_item_id(item)+1;
 
