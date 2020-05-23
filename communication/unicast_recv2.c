@@ -34,18 +34,13 @@
 #include "lib/random.h"
 #include "sys/ctimer.h"
 #include "sys/etimer.h"
-#include "net/ip/uip.h"
-#include "net/ipv6/uip-ds6.h"
-#include "net/ip/uip-debug.h"
-
-#include "simple-udp.h"
-#include "servreg-hack.h"
 
 #include "net/rpl/rpl.h"
 
 #include <stdio.h>
 #include <string.h>
 
+#include "messaging.h"
 #define UDP_PORT 1234
 #define SERVICE_ID 191
 
@@ -53,6 +48,9 @@
 #define SEND_TIME		(random_rand() % (SEND_INTERVAL))
 
 static struct simple_udp_connection unicast_connection;
+
+
+struct Message my_message;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(unicast_receiver_process, "Unicast receiver example process");
@@ -69,72 +67,28 @@ receiver(struct simple_udp_connection *c,
 {
   printf("Data received from ");
   uip_debug_ipaddr_print(sender_addr);
-  printf(" on port %d from port %d with length %d: '%s'\n",
-         receiver_port, sender_port, datalen, data);
+  struct Message* inMsg = (struct Message*) data;
+  my_message= *inMsg; 
+  printf(" on port %d from port %d, with ID %d, with length %d: '%s'\n",
+         receiver_port, sender_port, my_message.srcID, datalen, my_message.msg);
+  // my_message.destID=my_message.srcID;
+  // my_message.srcID=SERVICE_ID;
+  // sendMessage(unicast_connection,&my_message);
 
 }
 /*---------------------------------------------------------------------------*/
-static uip_ipaddr_t *
-set_global_address(void)
-{
-  static uip_ipaddr_t ipaddr;
-  int i;
-  uint8_t state;
 
-  uip_ip6addr(&ipaddr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
-  uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
-  uip_ds6_addr_add(&ipaddr, 0, ADDR_AUTOCONF);
-
-  printf("IPv6 addresses: ");
-  for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
-    state = uip_ds6_if.addr_list[i].state;
-    if(uip_ds6_if.addr_list[i].isused &&
-       (state == ADDR_TENTATIVE || state == ADDR_PREFERRED)) {
-      uip_debug_ipaddr_print(&uip_ds6_if.addr_list[i].ipaddr);
-      printf("\n");
-    }
-  }
-
-  return &ipaddr;
-}
-/*---------------------------------------------------------------------------*/
-static void
-create_rpl_dag(uip_ipaddr_t *ipaddr)
-{
-  struct uip_ds6_addr *root_if;
-
-  root_if = uip_ds6_addr_lookup(ipaddr);
-  if(root_if != NULL) {
-    rpl_dag_t *dag;
-    uip_ipaddr_t prefix;
-    
-    rpl_set_root(RPL_DEFAULT_INSTANCE, ipaddr);
-    dag = rpl_get_any_dag();
-    uip_ip6addr(&prefix, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
-    rpl_set_prefix(dag, &prefix, 64);
-    PRINTF("created a new RPL dag\n");
-  } else {
-    PRINTF("failed to create a new RPL DAG\n");
-  }
-}
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(unicast_receiver_process, ev, data)
 {
   uip_ipaddr_t *ipaddr;
 
   PROCESS_BEGIN();
-
-  servreg_hack_init();
-
-  ipaddr = set_global_address();
-
-  create_rpl_dag(ipaddr);
-
-  servreg_hack_register(SERVICE_ID, ipaddr);
-
+  
+  registerConnection(SERVICE_ID,true);
+  
   simple_udp_register(&unicast_connection, UDP_PORT,
-                      NULL, UDP_PORT, receiver);
-
+                        NULL, UDP_PORT, receiver);
   while(1) {
     PROCESS_WAIT_EVENT();
   }
