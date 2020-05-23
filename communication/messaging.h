@@ -1,6 +1,10 @@
 #ifndef _DEFINITIONS_H
 #define _DEFINITIONS_H
 #include "contiki.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #endif
 
 #include "servreg-hack.h"
