@@ -102,7 +102,7 @@ uip_ipaddr_t *registerConnection(uint8_t ID)
     if (ID==0) {
         ID=generateID();    
         if(ID==190) create_rpl_dag(ipaddr);
-        printf("My ID is:\n", ID);ø
+        printf("My ID is:\n", ID);
     }
     servreg_hack_register(ID, ipaddr);
 
