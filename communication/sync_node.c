@@ -30,7 +30,6 @@
  *
  */
 
-#include "contiki.h"
 
 
 

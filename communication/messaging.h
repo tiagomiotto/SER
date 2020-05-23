@@ -1,3 +1,5 @@
+
+#include "contiki.h"
 #include "servreg-hack.h"
 #include "simple-udp.h"
 #include "net/ip/uip.h"
@@ -10,7 +12,8 @@
 #include "sys/ctimer.h"
 #include "sys/etimer.h"
 
-#define DELAY_MAX (20 * CLOCK_SECOND)
+
+#define DELAY_MAX (random_rand() %(20 * CLOCK_SECOND))
 struct Message
 {
   char msg[50];
