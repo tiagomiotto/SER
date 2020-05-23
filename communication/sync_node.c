@@ -37,7 +37,7 @@
 
 
 #include "dev/serial-line.h"
-#include "net/rpl/rpl.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,12 +53,6 @@
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
 static struct simple_udp_connection unicast_connection;
-
-struct message
-{
-  char msg[50];
-  int id;
-};
 
 struct Message my_message;
 
@@ -90,7 +84,7 @@ static uip_ipaddr_t *set_global_address(void)
 {
   static uip_ipaddr_t ipaddr;
   int i;
-  
+
   uint8_t state;
 
   uip_ip6addr(&ipaddr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
@@ -112,27 +106,6 @@ static uip_ipaddr_t *set_global_address(void)
   return &ipaddr;
 }
 
-static void create_rpl_dag(uip_ipaddr_t *ipaddr)
-{
-  struct uip_ds6_addr *root_if;
-
-  root_if = uip_ds6_addr_lookup(ipaddr);
-  if (root_if != NULL)
-  {
-    rpl_dag_t *dag;
-    uip_ipaddr_t prefix;
-
-    rpl_set_root(RPL_DEFAULT_INSTANCE, ipaddr);
-    dag = rpl_get_any_dag();
-    uip_ip6addr(&prefix, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
-    rpl_set_prefix(dag, &prefix, 64);
-    PRINTF("created a new RPL dag\n");
-  }
-  else
-  {
-    PRINTF("failed to create a new RPL DAG\n");
-  }
-}
 
 void send_command(char* messageTX, uint8_t SERVICE_ID)
 {
