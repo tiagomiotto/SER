@@ -20,4 +20,4 @@ struct Message prepareMessage(char* data, uint8_t srcID,uint8_t destID, uint8_t 
 
 static uip_ipaddr_t *set_global_address(void);
 
-static void create_rpl_dag(uip_ipaddr_t *ipaddr)
+static void create_rpl_dag(uip_ipaddr_t *ipaddr);
