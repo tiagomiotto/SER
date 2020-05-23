@@ -5,7 +5,9 @@
 #include "net/ip/uip-debug.h"
 #include "net/rpl/rpl.h"
 #include "stdbool.h"
+#include <time.h>
 
+#define DELAY_MAX (20 * CLOCK_SECOND)
 struct Message
 {
   char msg[50];
