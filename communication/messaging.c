@@ -82,8 +82,9 @@ uip_ipaddr_t *registerConnection(uint8_t ID, bool rplDAG)
     servreg_hack_init();
 
     ipaddr = set_global_address();
+    
+    //For receivers (they need this for some reason)
     if (rplDAG) {
-        printf("RPL dag On\n");
         create_rpl_dag(ipaddr);
     }
     servreg_hack_register(ID, ipaddr);
