@@ -4,3 +4,4 @@ CONTIKI=/home/user/Desktop/contiki
 
 CONTIKI_WITH_IPV6 = 1
 include $(CONTIKI)/Makefile.include
+PROJECT_SOURCEFILES += messaging.c
