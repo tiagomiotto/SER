@@ -44,11 +44,10 @@
 #define UDP_PORT 1234
 #define SERVICE_ID 190
 
-#define SEND_INTERVAL		(10 * CLOCK_SECOND)
-#define SEND_TIME		(random_rand() % (SEND_INTERVAL))
+#define SEND_INTERVAL (10 * CLOCK_SECOND)
+#define SEND_TIME (random_rand() % (SEND_INTERVAL))
 
 static struct simple_udp_connection unicast_connection;
-
 
 struct Message my_message;
 
@@ -67,14 +66,13 @@ receiver(struct simple_udp_connection *c,
 {
   printf("Data received from ");
   uip_debug_ipaddr_print(sender_addr);
-  struct Message* inMsg = (struct Message*) data;
-  my_message= *inMsg; 
+  struct Message *inMsg = (struct Message *)data;
+  my_message = *inMsg;
   printf(" on port %d from port %d, with ID %d, with length %d: '%s'\n",
          receiver_port, sender_port, my_message.srcID, datalen, my_message.msg);
   // my_message.destID=my_message.srcID;
   // my_message.srcID=SERVICE_ID;
   // sendMessage(unicast_connection,&my_message);
-
 }
 /*---------------------------------------------------------------------------*/
 
@@ -85,20 +83,21 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
 
   PROCESS_BEGIN();
   servreg_hack_init();
-    
+
   simple_udp_register(&unicast_connection, UDP_PORT,
-                        NULL, UDP_PORT, receiver);
+                      NULL, UDP_PORT, receiver);
 
-    //     printf("Delay max %d\n", DELAY_MAX);
-    // static struct etimer timer;
-    // etimer_set(&timer,  DELAY_MAX);
-    // PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
-  
-  ipaddr=registerConnection(0); //All nodes except the sync must be 0
+  //Nodes need a delay before starting so the servreg is properly
+  //initiated before they search IDs
+  printf("Delay max %d\n", DELAY_MAX);
+  static struct etimer timer;
+  etimer_set(&timer, DELAY_MAX);
+  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
- 
+  ipaddr = registerConnection(0); //All nodes except the sync must be 0
 
-  while(1) {
+  while (1)
+  {
     PROCESS_WAIT_EVENT();
   }
   PROCESS_END();

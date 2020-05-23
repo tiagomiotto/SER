@@ -13,7 +13,7 @@
 #include "sys/etimer.h"
 
 
-#define DELAY_MAX (random_rand() %(20 * CLOCK_SECOND))
+#define DELAY_MAX (random_rand() %(5 * CLOCK_SECOND))
 struct Message
 {
   char msg[50];
