@@ -215,7 +215,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   PROCESS_BEGIN();
 
   registerConnection(ID);
-  
+  search_list();
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
   while (1)
