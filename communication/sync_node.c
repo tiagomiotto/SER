@@ -216,16 +216,8 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   uip_ipaddr_t *ipaddr;
   PROCESS_BEGIN();
 
-  // servreg_hack_init();
+  registerConnection(ID,false);
   
-  // ipaddr = set_global_address();
-
-  // servreg_hack_register(ID, ipaddr);
-
-  // simple_udp_register(&unicast_connection, UDP_PORT,
-  //                     NULL, UDP_PORT, receiver);
-  bool rplDag = false;
-  registerConnection(unicast_connection,UDP_PORT,receiver, ID,false);
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
   while (1)

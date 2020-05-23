@@ -23,6 +23,4 @@ uip_ipaddr_t* set_global_address(void);
 
 void create_rpl_dag(uip_ipaddr_t *ipaddr);
 
-uip_ipaddr_t *registerConnection(struct simple_udp_connection connection,
-                                        uint8_t UDP_PORT, simple_udp_callback receive_callback,
-                                        uint8_t ID, bool rplDAG);
+uip_ipaddr_t *registerConnection(uint8_t ID, bool rplDAG);
