@@ -78,13 +78,13 @@ void create_rpl_dag(uip_ipaddr_t *ipaddr)
 
 uip_ipaddr_t *registerConnection(struct simple_udp_connection connection,
                                         uint8_t UDP_PORT, simple_udp_callback receive_callback,
-                                        uint8_t ID)
+                                        uint8_t ID, bool rplDAG)
 {
     uip_ipaddr_t *ipaddr;
     servreg_hack_init();
 
     ipaddr = set_global_address();
-
+    if(rplDAG) create_rpl_dag(ipaddr);
     servreg_hack_register(ID, ipaddr);
 
     simple_udp_register(&connection, UDP_PORT,
