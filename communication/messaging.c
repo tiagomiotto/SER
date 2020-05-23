@@ -80,9 +80,9 @@ uint8_t generateID(){
     servreg_hack_item_t *item;
     uint8_t id = 0;
     printf("Delay max %d\n", DELAY_MAX);
-    static struct etimer timer;
-    etimer_set(&timer,  DELAY_MAX);
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+    // static struct etimer timer;
+    // etimer_set(&timer,  DELAY_MAX);
+    // PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
   for (item = servreg_hack_list_head();
        item != NULL;
