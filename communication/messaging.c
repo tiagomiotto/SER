@@ -97,7 +97,6 @@ uint8_t generateID(){
 uip_ipaddr_t *registerConnection(uint8_t ID)
 {
     uip_ipaddr_t *ipaddr;
-    servreg_hack_init();
 
     ipaddr = set_global_address();
     

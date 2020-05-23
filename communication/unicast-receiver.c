@@ -84,7 +84,7 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
   uip_ipaddr_t *ipaddr;
 
   PROCESS_BEGIN();
-  
+  servreg_hack_init();
     
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
