@@ -77,7 +77,8 @@ static void create_rpl_dag(uip_ipaddr_t *ipaddr)
 }
 
 static uip_ipaddr_t *registerConnection(struct simple_udp_connection connection,
-                                        uint8_t UDP_PORT, simple_udp_callback receive_callback)
+                                        uint8_t UDP_PORT, simple_udp_callback receive_callback,
+                                        uint8_t ID)
 {
     uip_ipaddr_t *ipaddr;
     servreg_hack_init();
