@@ -81,10 +81,9 @@ uint8_t generateID(){
     uint8_t id = 0;
     printf("Delay max %d\n", DELAY_MAX);
     static struct etimer timer;
-    srand (time(NULL));
-    etimer_set(&timer, rand() % DELAY_MAX);
+    etimer_set(&timer, random_rand() % DELAY_MAX);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
-    
+
   for (item = servreg_hack_list_head();
        item != NULL;
        item = list_item_next(item))
