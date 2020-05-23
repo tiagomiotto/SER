@@ -85,7 +85,7 @@ uip_ipaddr_t *registerConnection(uint8_t ID, bool rplDAG)
     
     //For receivers (they need this for some reason)
     if (rplDAG) {
-        //create_rpl_dag(ipaddr);
+        create_rpl_dag(ipaddr);
     }
     servreg_hack_register(ID, ipaddr);
 

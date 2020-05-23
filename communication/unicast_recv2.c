@@ -85,7 +85,7 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
 
   PROCESS_BEGIN();
   
-  registerConnection(SERVICE_ID,true);
+  registerConnection(SERVICE_ID,false);
   
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
