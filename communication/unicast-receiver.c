@@ -123,16 +123,18 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
 
   PROCESS_BEGIN();
 
-  servreg_hack_init();
+  // servreg_hack_init();
 
-  ipaddr = set_global_address();
+  // ipaddr = set_global_address();
 
-  create_rpl_dag(ipaddr);
+  // create_rpl_dag(ipaddr);
 
-  servreg_hack_register(SERVICE_ID, ipaddr);
+  // servreg_hack_register(SERVICE_ID, ipaddr);
 
-  simple_udp_register(&unicast_connection, UDP_PORT,
-                      NULL, UDP_PORT, receiver);
+  // simple_udp_register(&unicast_connection, UDP_PORT,
+  //                     NULL, UDP_PORT, receiver);
+
+  registerConnection(unicast_connection,UDP_PORT,receiver, SERVICE_ID);
 
   while(1) {
     PROCESS_WAIT_EVENT();
