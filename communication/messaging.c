@@ -109,11 +109,13 @@ uip_ipaddr_t *registerConnection(uint8_t ID)
     ipaddr = set_global_address();
     
     //For receivers assing an ID and if it is the first one start the RPL
-    if (ID==0) {
-        ID=generateID();    
-        if(ID==190) create_rpl_dag(ipaddr);
-        printf("My ID is: %d\n", ID);
+    if (ID==1) {
+        
+        reate_rpl_dag(ipaddr);
+        
     }
+    ID=generateID();    
+    printf("My ID is: %d\n", ID);
     servreg_hack_register(ID, ipaddr);
     
 
