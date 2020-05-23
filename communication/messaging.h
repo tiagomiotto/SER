@@ -16,3 +16,5 @@ void sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX);
 
 struct Message prepareMessage(char* data, uint8_t srcID,uint8_t destID, uint8_t code);
+
+static uip_ipaddr_t *set_global_address(void)
