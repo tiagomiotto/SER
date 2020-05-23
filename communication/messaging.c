@@ -78,29 +78,28 @@ void create_rpl_dag(uip_ipaddr_t *ipaddr)
 
 uint8_t generateID(){
     servreg_hack_item_t *item;
-    uint8_t id = 0;
-
+    uint8_t max=0;
   for (item = servreg_hack_list_head();
        item != NULL;
        item = list_item_next(item))
   {
-    if(list_item_next(item) != NULL)printf(" ID is: %d\n", servreg_hack_item_id(item));
-    else{
-        printf(" Last ID is: %d\n", servreg_hack_item_id(item));
-         if(servreg_hack_item_id(item)!=1) {
+    // if(list_item_next(item) != NULL)printf(" ID is: %d\n", servreg_hack_item_id(item));
+    // else{
+    //     printf(" Last ID is: %d\n", servreg_hack_item_id(item));
+    //      if(servreg_hack_item_id(item)!=1) {
 
-            printf("It is not 1\n");
+    //         printf("It is not 1\n");
 
-             id=servreg_hack_item_id(item)+1;
-             printf("It is not 1 , new id is %d\n",id);
-             }
+    //          id=servreg_hack_item_id(item)+1;
+    //          printf("It is not 1 , new id is %d\n",id);
+    //          }
 
-    }
+    // }
+    if(servreg_hack_item_id(item)>max) max =servreg_hack_item_id(item);
     
-
   }
-  if(id==0) return 190;
-  return id;
+  if(max>1) return max+1;
+  return 190;
 }
 
 uip_ipaddr_t *registerConnection(uint8_t ID)
