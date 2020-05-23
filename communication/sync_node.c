@@ -123,7 +123,7 @@ void send_command(char* messageTX, uint8_t SERVICE_ID)
 PROCESS_THREAD(handler_process, ev, data)
 {
 
-  int i = 0;
+
   
   PROCESS_BEGIN();
 
@@ -212,8 +212,7 @@ void search_list()
 
 PROCESS_THREAD(unicast_sender_process, ev, data)
 {
-  uip_ipaddr_t *addr;
-  uip_ipaddr_t *ipaddr;
+
   PROCESS_BEGIN();
 
   registerConnection(ID);

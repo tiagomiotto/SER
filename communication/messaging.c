@@ -87,7 +87,7 @@ uint8_t generateID(){
     id=servreg_hack_item_id(item)+1;
 
   }
-  if(ID==0) return 190;
+  if(id==0) return 190;
   return id;
 }
 
