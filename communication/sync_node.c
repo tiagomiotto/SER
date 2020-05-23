@@ -90,6 +90,7 @@ static uip_ipaddr_t *set_global_address(void)
 {
   static uip_ipaddr_t ipaddr;
   int i;
+  
   uint8_t state;
 
   uip_ip6addr(&ipaddr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
