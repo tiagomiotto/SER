@@ -216,12 +216,12 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
-                        
+
   registerConnection(ID);
       printf("Delay max %d\n", DELAY_MAX);
-    // static struct etimer timer;
-    // etimer_set(&timer,  DELAY_MAX);
-    // PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+    static struct etimer timer;
+    etimer_set(&timer,  DELAY_MAX);
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
   search_list();
   while (1)
