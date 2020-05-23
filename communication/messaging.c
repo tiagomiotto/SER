@@ -80,7 +80,6 @@ uint8_t generateID(){
     servreg_hack_item_t *item;
     uint8_t id = 0;
 
-   clock_wait(DELAY_MAX);
   for (item = servreg_hack_list_head();
        item != NULL;
        item = list_item_next(item))
