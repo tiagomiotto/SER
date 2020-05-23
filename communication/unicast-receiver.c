@@ -88,7 +88,9 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
     
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
-  registerConnection(0); //All nodes except the sync must be 0
+  ipaddr=registerConnection(0); //All nodes except the sync must be 0
+
+ 
 
   while(1) {
     PROCESS_WAIT_EVENT();

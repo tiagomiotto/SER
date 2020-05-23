@@ -80,7 +80,7 @@ uint8_t generateID(){
     servreg_hack_item_t *item;
     uint8_t id = 0;
 
-
+   clock_wait(DELAY_MAX);
   for (item = servreg_hack_list_head();
        item != NULL;
        item = list_item_next(item))
@@ -108,7 +108,7 @@ uip_ipaddr_t *registerConnection(uint8_t ID)
         printf("My ID is: %d\n", ID);
     }
     servreg_hack_register(ID, ipaddr);
-    generateID();
+    
 
     return ipaddr;
 }
