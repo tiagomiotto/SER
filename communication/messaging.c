@@ -85,8 +85,17 @@ uint8_t generateID(){
        item = list_item_next(item))
   {
       printf(" ID is: %d\n", servreg_hack_item_id(item));
-    if(list_item_next(item)== NULL)
-    if(servreg_hack_item_id(item)!=1) id=servreg_hack_item_id(item)+1;
+    if(list_item_next(item)== NULL){
+         if(servreg_hack_item_id(item)!=1) {
+
+            printf("It is not 1\n");
+
+             id=servreg_hack_item_id(item)+1;
+             printf("It is not 1 , new id is %d\n",id);
+             }
+
+    }
+    
 
   }
   if(id==0) return 190;
