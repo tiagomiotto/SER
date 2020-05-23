@@ -7,10 +7,12 @@
 struct Message
 {
   char msg[50];
-  int id;
+  uint8_t srcID;
+  uint8_t destID;
+  uint8_t code;
 };
 
 void sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX);
 
-struct Message prepareMessage(char* data, uint8_t txID, uint8_t code);
+struct Message prepareMessage(char* data, uint8_t srcID,uint8_t destID, uint8_t code);

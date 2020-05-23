@@ -4,7 +4,7 @@ void sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX)
 {
     uip_ipaddr_t *addr;
-    addr = servreg_hack_lookup(messageTX->id);
+    addr = servreg_hack_lookup(messageTX->destID);
     if (addr != NULL)
     {
     
@@ -15,14 +15,16 @@ void sendMessage(struct simple_udp_connection connection,
     }
     else
     {
-        printf("Service %d not found\n", messageTX->id);
+        printf("Service %d not found\n", messageTX->destID);
     }
 }
 
-struct Message prepareMessage(char* data, uint8_t txID, uint8_t code){
+struct Message prepareMessage(char* data, uint8_t srcID,uint8_t destID, uint8_t code){
     struct Message messageTx;
     strcpy(messageTx.msg, data);
-    messageTx.id=txID;
+    messageTx.srcID=srcID;
+    messageTx.destID=destID;
+    messageTx.code=code;
     return messageTx;
 }
 

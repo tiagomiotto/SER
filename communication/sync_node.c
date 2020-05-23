@@ -60,7 +60,7 @@ struct message
   int id;
 };
 
-struct message my_message;
+struct Message my_message;
 
 void search_list();
 
@@ -181,13 +181,21 @@ PROCESS_THREAD(handler_process, ev, data)
     //Verificar aqui, se madno uma coisa que não é um numero ele morre
     msg = (char *)data;
     char *token = strtok(msg, ",");
+    if(token == NULL){
+      printf("Invalid command\n");
+      continue;
+    }
     char *pEnd;
-    int id = strtol(token, &pEnd, 10);
+    int destID = strtol(token, &pEnd, 10);
     token = strtok(NULL,",");
     
 
     if(strcmp(token,"on") ==0|| strcmp(token,"off")==0){
-      send_command(token,id);
+      //send_command(token,id);
+      my_message = prepareMessage(token,ID,destID,1);
+      process_post(&unicast_sender_process,
+                 PROCESS_EVENT_CONTINUE, &my_message);
+      
     }
     else printf("Invalid command\n");
 
@@ -250,22 +258,22 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
 
-    struct message *my_messageRX = data;
+    struct Message *my_messageRX = data;
     sendMessage(unicast_connection,my_messageRX);
-    addr = servreg_hack_lookup(my_messageRX->id);
-    if (addr != NULL)
-    {
+    // addr = servreg_hack_lookup(my_messageRX->id);
+    // if (addr != NULL)
+    // {
 
-      my_message.id=ID;
-      printf("Sending unicast to ");
-      uip_debug_ipaddr_print(addr);
-      printf("\n");
-      simple_udp_sendto(&unicast_connection, &my_message, sizeof(struct message) + 1, addr);
-    }
-    else
-    {
-      printf("Service %d not found\n", my_messageRX->id);
-    }
+    //   my_message.id=ID;
+    //   printf("Sending unicast to ");
+    //   uip_debug_ipaddr_print(addr);
+    //   printf("\n");
+    //   simple_udp_sendto(&unicast_connection, &my_message, sizeof(struct message) + 1, addr);
+    // }
+    // else
+    // {
+    //   printf("Service %d not found\n", my_messageRX->id);
+    // }
   }
 
   PROCESS_END();
