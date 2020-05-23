@@ -219,9 +219,9 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     static struct etimer timer;
     etimer_set(&timer,  DELAY_MAX);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
-  search_list();
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
+  search_list();
   while (1)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
