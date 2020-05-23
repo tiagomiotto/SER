@@ -10,7 +10,7 @@ struct Message
   int id;
 };
 
-void sendMessage(simple_udp_connection connection,
+void sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX);
 
 struct Message prepareMessage(char* data, uint8_t txID, uint8_t code);

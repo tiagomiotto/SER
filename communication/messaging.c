@@ -1,6 +1,6 @@
 #include "messaging.h"
 
-void sendMessage(simple_udp_connection connection,
+void sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX)
 {
     uip_ipaddr_t *addr;
