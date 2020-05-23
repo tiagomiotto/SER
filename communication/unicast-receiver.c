@@ -89,7 +89,7 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
 
   //Nodes need a delay before starting so the servreg is properly
   //initiated before they search IDs
-  printf("Delay max %d\n", DELAY_MAX);
+  printf("Delay max %d\n", CLOCK_SECOND);
   static struct etimer timer;
   etimer_set(&timer, DELAY_MAX);
   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
