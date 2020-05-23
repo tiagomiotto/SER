@@ -216,7 +216,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   uip_ipaddr_t *ipaddr;
   PROCESS_BEGIN();
 
-  registerConnection(ID,false);
+  registerConnection(ID);
   
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);

@@ -76,16 +76,32 @@ void create_rpl_dag(uip_ipaddr_t *ipaddr)
     }
 }
 
-uip_ipaddr_t *registerConnection(uint8_t ID, bool rplDAG)
+uint8_t generateID(){
+    servreg_hack_item_t *item;
+    uint8_t id = 0;
+  for (item = servreg_hack_list_head();
+       item != NULL;
+       item = list_item_next(item))
+  {
+    if(list_item_next(item)== NULL)
+    id=servreg_hack_item_id(item)+1;
+
+  }
+  if(ID==0) return 190;
+  return id;
+}
+
+uip_ipaddr_t *registerConnection(uint8_t ID)
 {
     uip_ipaddr_t *ipaddr;
     servreg_hack_init();
 
     ipaddr = set_global_address();
     
-    //For receivers (they need this for some reason)
-    if (rplDAG) {
-        create_rpl_dag(ipaddr);
+    //For receivers assing an ID and if it is the first one start the RPL
+    if (ID==0) {
+        ID=generateID();    
+        if(ID==190) create_rpl_dag(ipaddr);
     }
     servreg_hack_register(ID, ipaddr);
 
