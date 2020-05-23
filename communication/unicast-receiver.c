@@ -71,6 +71,8 @@ receiver(struct simple_udp_connection *c,
   my_message= *inMsg; 
   printf(" on port %d from port %d, with ID %d, with length %d: '%s'\n",
          receiver_port, sender_port, my_message.srcID, datalen, my_message.msg);
+  sendMessage(unicast_connection,my_message);
+
 }
 /*---------------------------------------------------------------------------*/
 
