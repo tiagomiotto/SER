@@ -84,14 +84,12 @@ uip_ipaddr_t *registerConnection(struct simple_udp_connection connection,
     servreg_hack_init();
 
     ipaddr = set_global_address();
-    printf("RPL dag Off\n");
+    printf("RPL dag Off, %d, %d\n");
     if (rplDAG) {
         printf("RPL dag On\n");
         create_rpl_dag(ipaddr);
     }
     servreg_hack_register(ID, ipaddr);
 
-    simple_udp_register(&connection, UDP_PORT,
-                        NULL, UDP_PORT, receive_callback);
     return ipaddr;
 }
