@@ -28,7 +28,7 @@ struct Message prepareMessage(char* data, uint8_t srcID,uint8_t destID, uint8_t 
     return messageTx;
 }
 
-static uip_ipaddr_t *set_global_address(void)
+static uip_ipaddr_t* set_global_address(void)
 {
   static uip_ipaddr_t ipaddr;
   int i;
