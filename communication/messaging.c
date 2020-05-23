@@ -11,7 +11,7 @@ void sendMessage(struct simple_udp_connection connection,
         printf("Sending unicast to ");
         uip_debug_ipaddr_print(addr);
         printf(" %s, %d, %d, $d\n");
-        simple_udp_sendto(&connection, &messageTX, sizeof(struct Message) + 1, addr);
+        simple_udp_sendto(&connection, messageTX, sizeof(struct Message) + 1, addr);
     }
     else
     {
