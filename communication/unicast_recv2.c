@@ -87,10 +87,10 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
   servreg_hack_init();
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
-      printf("Delay max %d\n", DELAY_MAX);
-    static struct etimer timer;
-    etimer_set(&timer,  DELAY_MAX);
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+    //   printf("Delay max %d\n", DELAY_MAX);
+    // static struct etimer timer;
+    // etimer_set(&timer,  DELAY_MAX);
+    // PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
   
   registerConnection(0); //All nodes except the sync must be 0
   

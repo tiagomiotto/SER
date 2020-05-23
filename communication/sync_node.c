@@ -213,10 +213,11 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 {
 
   PROCESS_BEGIN();
+  
   servreg_hack_init();
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
-                        
+
   registerConnection(ID);
 
   while (1)
