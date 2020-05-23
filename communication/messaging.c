@@ -68,23 +68,23 @@ void create_rpl_dag(uip_ipaddr_t *ipaddr)
         dag = rpl_get_any_dag();
         uip_ip6addr(&prefix, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
         rpl_set_prefix(dag, &prefix, 64);
-        PRINTF("created a new RPL dag\n");
+        printf("created a new RPL dag\n");
     }
     else
     {
-        PRINTF("failed to create a new RPL DAG\n");
+        printf("failed to create a new RPL DAG\n");
     }
 }
 
 uip_ipaddr_t *registerConnection(struct simple_udp_connection connection,
-                                        uint8_t UDP_PORT, simple_udp_callback receive_callback,
-                                        uint8_t ID, bool rplDAG)
+                                 uint8_t UDP_PORT, simple_udp_callback receive_callback,
+                                 uint8_t ID, bool rplDAG)
 {
     uip_ipaddr_t *ipaddr;
     servreg_hack_init();
 
     ipaddr = set_global_address();
-    if(rplDAG) create_rpl_dag(ipaddr);
+    if (rplDAG) create_rpl_dag(ipaddr);
     servreg_hack_register(ID, ipaddr);
 
     simple_udp_register(&connection, UDP_PORT,
