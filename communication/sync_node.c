@@ -260,20 +260,6 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
     struct Message *my_messageRX = data;
     sendMessage(unicast_connection,my_messageRX);
-    // addr = servreg_hack_lookup(my_messageRX->id);
-    // if (addr != NULL)
-    // {
-
-    //   my_message.id=ID;
-    //   printf("Sending unicast to ");
-    //   uip_debug_ipaddr_print(addr);
-    //   printf("\n");
-    //   simple_udp_sendto(&unicast_connection, &my_message, sizeof(struct message) + 1, addr);
-    // }
-    // else
-    // {
-    //   printf("Service %d not found\n", my_messageRX->id);
-    // }
   }
 
   PROCESS_END();
