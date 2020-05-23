@@ -1,5 +1,8 @@
-
+#ifndef _DEFINITIONS_H
+#define _DEFINITIONS_H
 #include "contiki.h"
+#endif
+
 #include "servreg-hack.h"
 #include "simple-udp.h"
 #include "net/ip/uip.h"
