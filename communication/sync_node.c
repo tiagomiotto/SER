@@ -79,44 +79,6 @@ receiver(struct simple_udp_connection *c,
          receiver_port, sender_port, datalen, (char *)data);
 }
 
-// static uip_ipaddr_t *set_global_address(void)
-// {
-//   static uip_ipaddr_t ipaddr;
-//   int i;
-
-//   uint8_t state;
-
-//   uip_ip6addr(&ipaddr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
-//   uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
-//   uip_ds6_addr_add(&ipaddr, 0, ADDR_AUTOCONF);
-
-//   printf("IPv6 addresses: ");
-//   for (i = 0; i < UIP_DS6_ADDR_NB; i++)
-//   {
-//     state = uip_ds6_if.addr_list[i].state;
-//     if (uip_ds6_if.addr_list[i].isused &&
-//         (state == ADDR_TENTATIVE || state == ADDR_PREFERRED))
-//     {
-//       uip_debug_ipaddr_print(&uip_ds6_if.addr_list[i].ipaddr);
-//       printf("\n");
-//     }
-//   }
-
-//   return &ipaddr;
-// }
-
-
-void send_command(char* messageTX, uint8_t SERVICE_ID)
-{
-
-    // strcpy(my_message.msg, messageTX);
-    // //my_message.id=SERVICE_ID;
-    // process_post(&unicast_sender_process,
-    //              PROCESS_EVENT_CONTINUE, &my_message);
-  
-
-}
-/*---------------------------------------------------------------------------*/
 
 /*----------------------------SERIAL HANDLING----------------------------------*/
 PROCESS_THREAD(handler_process, ev, data)
@@ -164,7 +126,7 @@ PROCESS_THREAD(handler_process, ev, data)
     
 
     if(strcmp(token,"on") ==0|| strcmp(token,"off")==0){
-      //send_command(token,id);
+  
       my_message = prepareMessage(token,ID,destID,1);
       process_post(&unicast_sender_process,
                  PROCESS_EVENT_CONTINUE, &my_message);
@@ -213,7 +175,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 {
 
   PROCESS_BEGIN();
-  
+
   servreg_hack_init();
   simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
