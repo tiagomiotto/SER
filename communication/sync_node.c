@@ -36,9 +36,6 @@
 #include "dev/serial-line.h"
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "messaging.h"
 
