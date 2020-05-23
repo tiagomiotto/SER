@@ -225,7 +225,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   // simple_udp_register(&unicast_connection, UDP_PORT,
   //                     NULL, UDP_PORT, receiver);
   bool rplDag = false;
-  registerConnection(unicast_connection,UDP_PORT,receiver, ID,rplDag);
+  registerConnection(unicast_connection,UDP_PORT,receiver, ID,false);
 
   while (1)
   {

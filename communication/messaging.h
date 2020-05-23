@@ -24,4 +24,4 @@ void create_rpl_dag(uip_ipaddr_t *ipaddr);
 
 uip_ipaddr_t *registerConnection(struct simple_udp_connection connection,
                                         uint8_t UDP_PORT, simple_udp_callback receive_callback,
-                                        uint8_t ID);
+                                        uint8_t ID, bool rplDAG);
