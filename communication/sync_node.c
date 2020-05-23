@@ -136,10 +136,10 @@ static void create_rpl_dag(uip_ipaddr_t *ipaddr)
 void send_command(char* messageTX, uint8_t SERVICE_ID)
 {
 
-    strcpy(my_message.msg, messageTX);
-    //my_message.id=SERVICE_ID;
-    process_post(&unicast_sender_process,
-                 PROCESS_EVENT_CONTINUE, &my_message);
+    // strcpy(my_message.msg, messageTX);
+    // //my_message.id=SERVICE_ID;
+    // process_post(&unicast_sender_process,
+    //              PROCESS_EVENT_CONTINUE, &my_message);
   
 
 }

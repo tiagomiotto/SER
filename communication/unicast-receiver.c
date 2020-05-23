@@ -34,18 +34,13 @@
 #include "lib/random.h"
 #include "sys/ctimer.h"
 #include "sys/etimer.h"
-#include "net/ip/uip.h"
-#include "net/ipv6/uip-ds6.h"
-#include "net/ip/uip-debug.h"
-
-#include "simple-udp.h"
-#include "servreg-hack.h"
 
 #include "net/rpl/rpl.h"
 
 #include <stdio.h>
 #include <string.h>
 
+#include "messaging.h"
 #define UDP_PORT 1234
 #define SERVICE_ID 190
 
@@ -54,13 +49,8 @@
 
 static struct simple_udp_connection unicast_connection;
 
-struct message
-{
-  char msg[50];
-  int id;
-};
 
-struct message my_message;
+struct Message my_message;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(unicast_receiver_process, "Unicast receiver example process");
@@ -77,10 +67,10 @@ receiver(struct simple_udp_connection *c,
 {
   printf("Data received from ");
   uip_debug_ipaddr_print(sender_addr);
-  struct message* inMsg = (struct message*) data;
+  struct Message* inMsg = (struct Message*) data;
   my_message= *inMsg; 
   printf(" on port %d from port %d, with ID %d, with length %d: '%s'\n",
-         receiver_port, sender_port, my_message.id, datalen, my_message.msg);
+         receiver_port, sender_port, my_message.srcID, datalen, my_message.msg);
 }
 /*---------------------------------------------------------------------------*/
 static uip_ipaddr_t *
