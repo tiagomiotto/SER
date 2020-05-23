@@ -6,6 +6,9 @@
 #include "net/rpl/rpl.h"
 #include "stdbool.h"
 #include <time.h>
+#include "lib/random.h"
+#include "sys/ctimer.h"
+#include "sys/etimer.h"
 
 #define DELAY_MAX (20 * CLOCK_SECOND)
 struct Message
