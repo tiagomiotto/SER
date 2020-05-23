@@ -1,5 +1,8 @@
 #include "servreg-hack.h"
 #include "simple-udp.h"
+#include "net/ip/uip.h"
+#include "net/ipv6/uip-ds6.h"
+#include "net/ip/uip-debug.h"
 
 struct Message
 {

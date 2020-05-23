@@ -34,9 +34,7 @@
 #include "lib/random.h"
 #include "sys/ctimer.h"
 #include "sys/etimer.h"
-#include "net/ip/uip.h"
-#include "net/ipv6/uip-ds6.h"
-#include "net/ip/uip-debug.h"
+
 
 #include "dev/serial-line.h"
 #include "net/rpl/rpl.h"
@@ -54,7 +52,6 @@
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
-static struct simple_udp_connection broadcast_connection;
 static struct simple_udp_connection unicast_connection;
 
 struct message
