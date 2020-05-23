@@ -84,7 +84,7 @@ uint8_t generateID(){
        item = list_item_next(item))
   {
     if(list_item_next(item)== NULL)
-    id=servreg_hack_item_id(item)+1;
+    if(servreg_hack_item_id(item)!=1) id=servreg_hack_item_id(item)+1;
 
   }
   if(id==0) return 190;
@@ -102,6 +102,7 @@ uip_ipaddr_t *registerConnection(uint8_t ID)
     if (ID==0) {
         ID=generateID();    
         if(ID==190) create_rpl_dag(ipaddr);
+        printf("My ID is:\n", ID)
     }
     servreg_hack_register(ID, ipaddr);
 
