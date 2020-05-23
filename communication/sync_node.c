@@ -223,7 +223,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     etimer_set(&timer,  DELAY_MAX);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
-  search_list();
+  generateID();
   while (1)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
