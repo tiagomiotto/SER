@@ -18,4 +18,6 @@ void sendMessage(struct simple_udp_connection connection,
 
 struct Message prepareMessage(char* data, uint8_t srcID,uint8_t destID, uint8_t code);
 
-//static uip_ipaddr_t *set_global_address(void)
+static uip_ipaddr_t *set_global_address(void);
+
+static void create_rpl_dag(uip_ipaddr_t *ipaddr)
