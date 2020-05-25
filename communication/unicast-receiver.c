@@ -45,7 +45,7 @@
 #define SERVICE_ID 190
 
 #define SEND_INTERVAL (10 * CLOCK_SECOND)
-#define SEND_TIME (random_rand() % (SEND_INTERVAL))
+#define SEND_TIME (random_rand() % (SEND_INTERVAL) + (1 * CLOCK_SECOND))
 
 static struct simple_udp_connection unicast_connection;
 

@@ -61,9 +61,10 @@ void search_list();
 
 PROCESS(handler_process, "Serial message handler process");
 PROCESS(serial_process, "Serial line test process");
-PROCESS(unicast_sender_process, "Network size check periodic process");
+PROCESS(communications_process, "Network size check periodic process");
+PROCESS(message_received_handler, "Network size check periodic process");
 
-AUTOSTART_PROCESSES( &unicast_sender_process, &serial_process, &handler_process /*, &available_nodes_proccess*/);
+AUTOSTART_PROCESSES( &communications_process, &serial_process, &handler_process /*, &message_received_handler*/);
 
 /*--------------------Communications---------------------------------*/
 static void
@@ -128,7 +129,7 @@ PROCESS_THREAD(handler_process, ev, data)
     if(strcmp(token,"on") ==0|| strcmp(token,"off")==0){
   
       my_message = prepareMessage(token,ID,destID,1);
-      process_post(&unicast_sender_process,
+      process_post(&communications_process,
                  PROCESS_EVENT_CONTINUE, &my_message);
       
     }
@@ -171,7 +172,29 @@ void search_list()
 
 /*-------------------------Unicast Sender Proccess--------------------------------*/
 
-PROCESS_THREAD(unicast_sender_process, ev, data)
+PROCESS_THREAD(communications_process, ev, data)
+{
+
+  PROCESS_BEGIN();
+
+  servreg_hack_init();
+  simple_udp_register(&unicast_connection, UDP_PORT,
+                        NULL, UDP_PORT, receiver);
+
+  registerConnection(ID);
+
+  while (1)
+  {
+    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
+    struct Message *my_messageRX = data;
+    sendMessage(unicast_connection,my_messageRX);
+  }
+
+  PROCESS_END();
+}
+
+
+PROCESS_THREAD(message_received_handler, ev, data)
 {
 
   PROCESS_BEGIN();
