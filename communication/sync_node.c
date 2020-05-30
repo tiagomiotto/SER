@@ -260,7 +260,7 @@ void updateNodeList_ActiveNode(int nodeID, int state)
        item = list_item_next(item))
   {
     int serviceID = servreg_hack_item_id(item);
-    printf(" %d\n", serviceID);
+    
     // Check if we already know this neighbor.
     for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
     {
