@@ -284,14 +284,13 @@ void updateNodeList_ActiveNode(int nodeID, int state)
     // If the node was not found, add it to the list
     if (n == NULL)
     {
-      printf(" Adding %d\n", serviceID);
       n = memb_alloc(&nodes_memb);
  
       // Initialize the fields.
       n->id = serviceID;
       if(serviceID == nodeID) n->state = STATE_ACTIVE;
       else n->state = STATE_ON;
-      printf(" Adding %d\n", n->id);
+  
 
       // Place the node on the neighbor list.
       list_add(nodes_list, n);
