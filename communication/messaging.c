@@ -19,6 +19,23 @@ void sendMessage(struct simple_udp_connection connection,
     }
 }
 
+void sendStateToSync(struct simple_udp_connection connection, int mydID, int state)
+{
+    uip_ipaddr_t *addr;
+    addr = servreg_hack_lookup(1);
+    if (addr != NULL)
+    {
+        printf("Sending state change to sync node | State: %d\n", state);
+        char buf[20];
+        sprintf(buf, "%d,%d", mydID, state);
+        simple_udp_sendto(&connection, buf, sizeof(buf) + 1, addr);
+    }
+    else
+    {
+        printf("Sync node unreacheable\n");
+    }
+}
+
 struct Message prepareMessage(char *data, uint8_t srcID, uint8_t destID, uint8_t code)
 {
     struct Message messageTx;
@@ -76,19 +93,21 @@ void create_rpl_dag(uip_ipaddr_t *ipaddr)
     }
 }
 
-uint8_t generateID(){
+uint8_t generateID()
+{
     servreg_hack_item_t *item;
-    uint8_t max=0;
-  for (item = servreg_hack_list_head();
-       item != NULL;
-       item = list_item_next(item))
-  {
+    uint8_t max = 0;
+    for (item = servreg_hack_list_head();
+         item != NULL;
+         item = list_item_next(item))
+    {
 
-    if(servreg_hack_item_id(item)>max) max =servreg_hack_item_id(item);
-    
-  }
-  if(max>1) return max+1;
-  return 190;
+        if (servreg_hack_item_id(item) > max)
+            max = servreg_hack_item_id(item);
+    }
+    if (max > 1)
+        return max + 1;
+    return 190;
 }
 
 uip_ipaddr_t *registerConnection(uint8_t ID)
@@ -96,17 +115,17 @@ uip_ipaddr_t *registerConnection(uint8_t ID)
     uip_ipaddr_t *ipaddr;
 
     ipaddr = set_global_address();
-    
+
     //For receivers assingn an ID and if it is the sync node start the RPL
-    if (ID==1) {
-        
+    if (ID == 1)
+    {
+
         create_rpl_dag(ipaddr);
-        
     }
-    else ID=generateID();    
+    else
+        ID = generateID();
     printf("My ID is: %d\n", ID);
     servreg_hack_register(ID, ipaddr);
-    
 
     return ipaddr;
 }

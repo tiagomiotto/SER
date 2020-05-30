@@ -14,6 +14,9 @@
 
 
 #define DELAY_MAX (random_rand() % (5 * CLOCK_SECOND) + (1 * CLOCK_SECOND))
+#define STATE_OFF 0
+#define STATE_ON 1
+#define STATE_ACTIVE 2
 
 struct Message
 {
@@ -33,3 +36,5 @@ uip_ipaddr_t* set_global_address(void);
 void create_rpl_dag(uip_ipaddr_t *ipaddr);
 
 uip_ipaddr_t *registerConnection(uint8_t ID);
+
+void sendStateToSync(struct simple_udp_connection connection, int mydID, int state);

@@ -53,9 +53,7 @@
 /* Network State Variables*/
 /* This #define defines the maximum amount of neighbors we can remember. */
 #define MAX_NODES 255
-#define STATE_OFF 0
-#define STATE_ON 1
-#define STATE_ACTIVE 2
+
 struct node
 {
   /* The ->next pointer is needed since we are placing these on a
@@ -292,7 +290,7 @@ void updateNodeList_ActiveNode(int nodeID, int state)
       else n->state = STATE_ON;
   
 
-      // Place the node on the neighbor list.
+      // Place the node on the node list.
       list_add(nodes_list, n);
     }
   }
@@ -311,7 +309,7 @@ void changeNodeSavedState(int nodeID, int state)
     if (n->id == nodeID)
     {
       n->id = state;
-       break;
+      break;
     }
   }
 }
