@@ -264,7 +264,7 @@ void updateNodeList_ActiveNode(int nodeID, int state)
     // Check if we already know this neighbor.
     for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
     {
-
+      printf(" %d\n", n->id);
       // We break out of the loop if the address of the noode already exists in the list
       if (n->id == serviceID)
       {
