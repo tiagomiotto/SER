@@ -35,6 +35,6 @@ uip_ipaddr_t* set_global_address(void);
 
 void create_rpl_dag(uip_ipaddr_t *ipaddr);
 
-uip_ipaddr_t *registerConnection(uint8_t ID);
+int registerConnection(uint8_t ID);
 
 void sendStateToSync(struct simple_udp_connection connection, int mydID, int state);
