@@ -13,7 +13,7 @@
 #include "sys/etimer.h"
 
 
-#define DELAY_MAX (random_rand() % (5 * CLOCK_SECOND) + (1 * CLOCK_SECOND))
+#define DELAY_MAX (random_rand() % (5 * CLOCK_SECOND) + (5 * CLOCK_SECOND))
 #define STATE_OFF 0
 #define STATE_ON 1
 #define STATE_ACTIVE 2
