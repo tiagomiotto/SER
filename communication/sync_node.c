@@ -73,8 +73,8 @@ struct node
 MEMB(nodes_memb, struct node, MAX_NEIGHBORS);
 LIST(nodes_list);
 
-void updateNodeList_ActiveNode(int ID, int state);
-void changeNodeSavedState(int ID, int state);
+void updateNodeList_ActiveNode(int nodeID, int state);
+void changeNodeSavedState(int nodeID, int state);
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
@@ -216,17 +216,17 @@ PROCESS_THREAD(message_received_handler, ev, data)
     char *msg = (char *)data;
     char *token = strtok(msg, ",");
     char *pEnd;
-    int ID = strtol(token, &pEnd, 10);
+    int nodeID = strtol(token, &pEnd, 10);
     token = strtok(NULL, ",");
     int state = strtol(token, &pEnd, 10);
-    if(state == STATE_ACTIVE) updateNodeList_ActiveNode(ID, state);
-    else if(state == STATE_ON || state == STATE_OFF) changeNodeSavedState(ID, state);
+    if(state == STATE_ACTIVE) updateNodeList_ActiveNode(nodeID, state);
+    else if(state == STATE_ON || state == STATE_OFF) changeNodeSavedState(nodeID, state);
   }
 
   PROCESS_END();
 }
 
-void updateNodeList_ActiveNode(int ID, int state)
+void updateNodeList_ActiveNode(int nodeID, int state)
 {
   servreg_hack_item_t *item;
   struct node *n;
@@ -246,7 +246,7 @@ void updateNodeList_ActiveNode(int ID, int state)
       {
 
         // If this is the new active node update status
-        if (serviceID == ID)
+        if (serviceID == nodeID)
           &n->state = state;
 
         // If it is not the new active node, change its state
@@ -272,7 +272,7 @@ void updateNodeList_ActiveNode(int ID, int state)
   }
 }
 
-void changeNodeSavedState(int ID, int state)
+void changeNodeSavedState(int nodeID, int state)
 {
   struct node *n;
 
@@ -282,7 +282,7 @@ void changeNodeSavedState(int ID, int state)
   {
 
     // We break out of the loop if the address of the noode already exists in the list
-    if (&n->id == ID)
+    if (&n->id == nodeID)
     {
       &n->id = state;
        break;
