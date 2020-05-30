@@ -106,10 +106,8 @@ receiver(struct simple_udp_connection *c,
 {
   printf("Data received on port %d from port %d with length %d : %s\n",
          receiver_port, sender_port, datalen, (char *)data);
-  struct Message *inMsg = (struct Message *)data;
-  my_message = *inMsg;
   process_post(&message_received_handler,
-               PROCESS_EVENT_CONTINUE, &my_message);
+               PROCESS_EVENT_CONTINUE, data);
 }
 
 /*----------------------------SERIAL HANDLING----------------------------------*/
