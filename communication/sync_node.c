@@ -60,7 +60,6 @@ void search_list();
 /*---------------------------------------------------------------------------*/
 
 PROCESS(handler_process, "Serial message handler process");
-//PROCESS(serial_process, "Serial line test process");
 PROCESS(communications_process, "Network size check periodic process");
 PROCESS(message_received_handler, "Network size check periodic proce ss");
 
@@ -78,6 +77,12 @@ receiver(struct simple_udp_connection *c,
 {
   printf("Data received on port %d from port %d with length %d : %s\n",
          receiver_port, sender_port, datalen, (char *)data);
+           struct Message *inMsg = (struct Message *)data;
+  my_message = *inMsg;
+      process_post(&message_received_handler,
+                 PROCESS_EVENT_CONTINUE, &my_message);
+              
+      
 }
 
 
@@ -140,18 +145,6 @@ PROCESS_THREAD(handler_process, ev, data)
   PROCESS_END();
 }
 
-PROCESS_THREAD(serial_process, ev, data)
-{
-  PROCESS_BEGIN();
-
-  for (;;)
-  {
-    PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
-    process_post_synch(&handler_process,
-                 PROCESS_EVENT_CONTINUE, data);
-  }
-  PROCESS_END();
-}
 
 /*-----------------------------NODE CHECK----------------------------*/
 void search_list()
@@ -199,16 +192,11 @@ PROCESS_THREAD(message_received_handler, ev, data)
 
   PROCESS_BEGIN();
 
-  servreg_hack_init();
-  simple_udp_register(&unicast_connection, UDP_PORT,
-                        NULL, UDP_PORT, receiver);
-
-  registerConnection(ID);
-
   while (1)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
     struct Message *my_messageRX = data;
+    my_messageRX->id=1000;
     sendMessage(unicast_connection,my_messageRX);
   }
 
