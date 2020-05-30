@@ -170,16 +170,28 @@ PROCESS_THREAD(handler_process, ev, data)
 /*-----------------------------NODE CHECK----------------------------*/
 void search_list()
 {
-  servreg_hack_item_t *item;
-  for (item = servreg_hack_list_head();
-       item != NULL;
-       item = list_item_next(item))
+  // servreg_hack_item_t *item;
+  // for (item = servreg_hack_list_head();
+  //      item != NULL;
+  //      item = list_item_next(item))
+  // {
+  //   if (list_item_next(item) != NULL)
+  //     printf("%d, ", servreg_hack_item_id(item));
+  //   else
+  //     printf("%d\n", servreg_hack_item_id(item));
+  // }
+
+  struct node *n;
+
+  //Cycle through all the nodes to find the node which changed state.
+  
+  for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
-    if (list_item_next(item) != NULL)
-      printf("%d, ", servreg_hack_item_id(item));
-    else
-      printf("%d\n", servreg_hack_item_id(item));
+    if (list_item_next(n) != NULL)
+      printf("%d | %d, ", n->id, n->state);
+      else printf("%d | %d \n", n->id, n->state);
   }
+
 }
 
 /*-------------------------Unicast Sender Proccess--------------------------------*/
