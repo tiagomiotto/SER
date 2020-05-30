@@ -110,7 +110,7 @@ uint8_t generateID()
     return 190;
 }
 
-uip_ipaddr_t *registerConnection(uint8_t ID)
+int registerConnection(uint8_t ID)
 {
     uip_ipaddr_t *ipaddr;
 
@@ -127,5 +127,5 @@ uip_ipaddr_t *registerConnection(uint8_t ID)
     printf("My ID is: %d\n", ID);
     servreg_hack_register(ID, ipaddr);
 
-    return ipaddr;
+    return ID;
 }

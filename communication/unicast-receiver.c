@@ -42,7 +42,7 @@
 
 #include "messaging.h"
 #define UDP_PORT 1234
-#define SERVICE_ID 190
+volatile int myID=0;
 
 #define SEND_INTERVAL (10 * CLOCK_SECOND)
 #define SEND_TIME (random_rand() % (SEND_INTERVAL) + (1 * CLOCK_SECOND))
@@ -72,8 +72,8 @@ receiver(struct simple_udp_connection *c,
          receiver_port, sender_port, my_message.srcID, datalen, my_message.msg);
   my_message.destID=my_message.srcID;
   my_message.srcID=SERVICE_ID;
-  if(strcmp(my_message.msg, "on")==0) sendStateToSync(unicast_connection,SERVICE_ID,STATE_ON );
-  if(strcmp(my_message.msg, "off")==0) sendStateToSync(unicast_connection,SERVICE_ID,STATE_OFF);
+  if(strcmp(my_message.msg, "on")==0) sendStateToSync(unicast_connection,myID,STATE_ON );
+  if(strcmp(my_message.msg, "off")==0) sendStateToSync(unicast_connection,myID,STATE_OFF);
 }
 /*---------------------------------------------------------------------------*/
 
@@ -81,7 +81,7 @@ receiver(struct simple_udp_connection *c,
 PROCESS_THREAD(unicast_receiver_process, ev, data)
 {
   uip_ipaddr_t *ipaddr;
-
+  
   PROCESS_BEGIN();
   servreg_hack_init();
 
@@ -95,7 +95,7 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
   etimer_set(&timer, DELAY_MAX);
   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
-  ipaddr = registerConnection(0); //All nodes except the sync must be 0
+  myID = registerConnection(myID); //All nodes except the sync must be 0
 
   while (1)
   {
