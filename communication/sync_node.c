@@ -37,6 +37,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/list.h"
+#include "lib/memb.h"
 #endif
 
 #include "dev/serial-line.h"
@@ -238,7 +240,7 @@ void updateNodeList_ActiveNode(int nodeID, int state)
   {
     uint8_t serviceID = servreg_hack_item_id(item);
     // Check if we already know this neighbor.
-    for (n = list_head(neighbors_list); n != NULL; n = list_item_next(n))
+    for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
     {
 
       // We break out of the loop if the address of the noode already exists in the list
@@ -278,7 +280,7 @@ void changeNodeSavedState(int nodeID, int state)
 
   //Cycle through all the nodes to find the node which changed state.
 
-  for (n = list_head(neighbors_list); n != NULL; n = list_item_next(n))
+  for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
 
     // We break out of the loop if the address of the noode already exists in the list
