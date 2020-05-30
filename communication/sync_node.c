@@ -196,7 +196,7 @@ PROCESS_THREAD(message_received_handler, ev, data)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
     struct Message *my_messageRX = data;
-    my_messageRX->id=1000;
+    my_messageRX->srcID=1000;
     sendMessage(unicast_connection,my_messageRX);
   }
 
