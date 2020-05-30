@@ -288,7 +288,7 @@ void updateNodeList_ActiveNode(int nodeID, int state)
       n = memb_alloc(&nodes_memb);
  
       // Initialize the fields.
-      n->id == serviceID;
+      n->id = serviceID;
       if(serviceID == nodeID) n->state = STATE_ACTIVE;
       else n->state = STATE_ON;
       printf(" Adding %d\n", n->id);
