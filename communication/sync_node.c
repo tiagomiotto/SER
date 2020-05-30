@@ -73,7 +73,7 @@ struct node
 MEMB(nodes_memb, struct node, MAX_NODES);
 LIST(nodes_list);
 
-void updateNodeList_ActiveNode(int nodeID, int state);
+bool updateNodeList_ActiveNode(int nodeID, int state);
 void changeNodeSavedState(int nodeID, int state);
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
