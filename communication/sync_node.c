@@ -82,6 +82,8 @@ static struct simple_udp_connection unicast_connection;
 
 struct Message my_message;
 
+volatile int activeNode =0;
+
 void search_list();
 
 /*---------------------------------------------------------------------------*/
@@ -172,16 +174,6 @@ PROCESS_THREAD(handler_process, ev, data)
 /*-----------------------------NODE CHECK----------------------------*/
 void search_list()
 {
-  // servreg_hack_item_t *item;
-  // for (item = servreg_hack_list_head();
-  //      item != NULL;
-  //      item = list_item_next(item))
-  // {
-  //   if (list_item_next(item) != NULL)
-  //     printf("%d, ", servreg_hack_item_id(item));
-  //   else
-  //     printf("%d\n", servreg_hack_item_id(item));
-  // }
 
   struct node *n;
 
@@ -248,18 +240,23 @@ PROCESS_THREAD(message_received_handler, ev, data)
   PROCESS_END();
 }
 
-void updateNodeList_ActiveNode(int nodeID, int state)
+bool updateNodeList_ActiveNode(int nodeID, int state)
 {
   servreg_hack_item_t *item;
   struct node *n;
 
+  if(nodeID==activeNode) return false;
   //Cycle through all the nodes to update the list, adding those missing and updating the node
   for (item = servreg_hack_list_head();
        item != NULL;
        item = list_item_next(item))
   {
+    
     int serviceID = servreg_hack_item_id(item);
     
+    //Don't add the sync node
+    if(serviceID==1) continue;
+
     // Check if we already know this neighbor.
     for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
     {
@@ -302,7 +299,6 @@ void changeNodeSavedState(int nodeID, int state)
   struct node *n;
 
   //Cycle through all the nodes to find the node which changed state.
-
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
 
