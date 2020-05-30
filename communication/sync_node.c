@@ -259,7 +259,7 @@ void updateNodeList_ActiveNode(int nodeID, int state)
        item != NULL;
        item = list_item_next(item))
   {
-    uint8_t serviceID = servreg_hack_item_id(item);
+    int serviceID = servreg_hack_item_id(item);
     // Check if we already know this neighbor.
     for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
     {
@@ -284,10 +284,11 @@ void updateNodeList_ActiveNode(int nodeID, int state)
     if (n == NULL)
     {
       n = memb_alloc(&nodes_memb);
-
+ 
       // Initialize the fields.
       n->id == serviceID;
-      n->state = STATE_ON;
+      if(serviceID == nodeID) n->state = STATE_ACTIVE;
+      else n->state = STATE_ON;
 
       // Place the node on the neighbor list.
       list_add(nodes_list, n);
