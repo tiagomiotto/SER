@@ -39,7 +39,6 @@
 #include <string.h>
 #endif
 
-
 #include "dev/serial-line.h"
 
 #include "messaging.h"
@@ -48,6 +47,34 @@
 #define UDP_PORT 1234
 #define UNICAST_PORT 1235
 #define ID 1
+
+/* Network State Variables*/
+/* This #define defines the maximum amount of neighbors we can remember. */
+#define MAX_NODES 255
+#define STATE_OFF 0
+#define STATE_ON 1
+#define STATE_ACTIVE 2
+struct node
+{
+  /* The ->next pointer is needed since we are placing these on a
+     Contiki list. */
+  struct node *next;
+
+  /* The ->id field holds the service ID for the node. */
+  uint8_t id;
+
+  /* The ->state field holds the state of the node 
+    0 - Off
+    1 - On
+    2 - Current active node
+  */
+  uint8_t state;
+};
+MEMB(nodes_memb, struct node, MAX_NEIGHBORS);
+LIST(nodes_list);
+
+void updateNodeList_ActiveNode(int ID, int state);
+void changeNodeSavedState(int ID, int state);
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
@@ -63,7 +90,7 @@ PROCESS(handler_process, "Serial message handler process");
 PROCESS(communications_process, "Network size check periodic process");
 PROCESS(message_received_handler, "Network size check periodic proce ss");
 
-AUTOSTART_PROCESSES( &communications_process,  &handler_process , &message_received_handler);
+AUTOSTART_PROCESSES(&communications_process, &handler_process, &message_received_handler);
 
 /*--------------------Communications---------------------------------*/
 static void
@@ -77,21 +104,16 @@ receiver(struct simple_udp_connection *c,
 {
   printf("Data received on port %d from port %d with length %d : %s\n",
          receiver_port, sender_port, datalen, (char *)data);
-           struct Message *inMsg = (struct Message *)data;
+  struct Message *inMsg = (struct Message *)data;
   my_message = *inMsg;
-      process_post(&message_received_handler,
-                 PROCESS_EVENT_CONTINUE, &my_message);
-              
-      
+  process_post(&message_received_handler,
+               PROCESS_EVENT_CONTINUE, &my_message);
 }
-
 
 /*----------------------------SERIAL HANDLING----------------------------------*/
 PROCESS_THREAD(handler_process, ev, data)
 {
 
-
-  
   PROCESS_BEGIN();
 
   while (1)
@@ -122,29 +144,28 @@ PROCESS_THREAD(handler_process, ev, data)
     //Verificar aqui, se madno uma coisa que não é um numero ele morre
     msg = (char *)data;
     char *token = strtok(msg, ",");
-    if(token == NULL){
+    if (token == NULL)
+    {
       printf("Invalid command\n");
       continue;
     }
     char *pEnd;
     int destID = strtol(token, &pEnd, 10);
-    token = strtok(NULL,",");
-    
+    token = strtok(NULL, ",");
 
-    if(strcmp(token,"on") ==0|| strcmp(token,"off")==0){
-  
-      my_message = prepareMessage(token,ID,destID,1);
+    if (strcmp(token, "on") == 0 || strcmp(token, "off") == 0)
+    {
+
+      my_message = prepareMessage(token, ID, destID, 1);
       process_post(&communications_process,
-                 PROCESS_EVENT_CONTINUE, &my_message);
-      
+                   PROCESS_EVENT_CONTINUE, &my_message);
     }
-    else printf("Invalid command\n");
-
+    else
+      printf("Invalid command\n");
   }
 
   PROCESS_END();
 }
-
 
 /*-----------------------------NODE CHECK----------------------------*/
 void search_list()
@@ -154,12 +175,10 @@ void search_list()
        item != NULL;
        item = list_item_next(item))
   {
-    if(list_item_next(item)!= NULL)
-    printf("%d, ", servreg_hack_item_id(item));
+    if (list_item_next(item) != NULL)
+      printf("%d, ", servreg_hack_item_id(item));
     else
-    printf("%d\n",servreg_hack_item_id(item));
-
-
+      printf("%d\n", servreg_hack_item_id(item));
   }
 }
 
@@ -172,7 +191,7 @@ PROCESS_THREAD(communications_process, ev, data)
 
   servreg_hack_init();
   simple_udp_register(&unicast_connection, UDP_PORT,
-                        NULL, UDP_PORT, receiver);
+                      NULL, UDP_PORT, receiver);
 
   registerConnection(ID);
 
@@ -180,12 +199,11 @@ PROCESS_THREAD(communications_process, ev, data)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
     struct Message *my_messageRX = data;
-    sendMessage(unicast_connection,my_messageRX);
+    sendMessage(unicast_connection, my_messageRX);
   }
 
   PROCESS_END();
 }
-
 
 PROCESS_THREAD(message_received_handler, ev, data)
 {
@@ -195,11 +213,79 @@ PROCESS_THREAD(message_received_handler, ev, data)
   while (1)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
-    struct Message *my_messageRX = data;
-    my_messageRX->destID=my_messageRX->srcID;
-    my_messageRX->srcID=200;
-    sendMessage(unicast_connection,my_messageRX);
+    char *msg = (char *)data;
+    char *token = strtok(msg, ",");
+    char *pEnd;
+    int ID = strtol(token, &pEnd, 10);
+    token = strtok(NULL, ",");
+    int state = strtol(token, &pEnd, 10);
+    if(state == STATE_ACTIVE) updateNodeList_ActiveNode(ID, state);
+    else if(state == STATE_ON || state == STATE_OFF) changeNodeSavedState(ID, state);
   }
 
   PROCESS_END();
+}
+
+void updateNodeList_ActiveNode(int ID, int state)
+{
+  servreg_hack_item_t *item;
+  struct node *n;
+
+  //Cycle through all the nodes to update the list, adding those missing and updating the node
+  for (item = servreg_hack_list_head();
+       item != NULL;
+       item = list_item_next(item))
+  {
+    uint8_t serviceID = servreg_hack_item_id(item);
+    // Check if we already know this neighbor.
+    for (n = list_head(neighbors_list); n != NULL; n = list_item_next(n))
+    {
+
+      // We break out of the loop if the address of the noode already exists in the list
+      if (&n->id == serviceID)
+      {
+
+        // If this is the new active node update status
+        if (serviceID == ID)
+          &n->state = state;
+
+        // If it is not the new active node, change its state
+        else if (&n->state == STATE_ACTIVE)
+          &n->state = STATE_ON;
+
+        break;
+      }
+    }
+
+    // If the node was not found, add it to the list
+    if (n == NULL)
+    {
+      n = memb_alloc(&nodes_memb);
+
+      // Initialize the fields.
+      &n->id == serviceID;
+      &n->state = STATE_ON;
+
+      // Place the node on the neighbor list.
+      list_add(nodes_list, n);
+    }
+  }
+}
+
+void changeNodeSavedState(int ID, int state)
+{
+  struct node *n;
+
+  //Cycle through all the nodes to find the node which changed state.
+
+  for (n = list_head(neighbors_list); n != NULL; n = list_item_next(n))
+  {
+
+    // We break out of the loop if the address of the noode already exists in the list
+    if (&n->id == ID)
+    {
+      &n->id = state;
+       break;
+    }
+  }
 }
