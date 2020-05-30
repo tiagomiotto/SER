@@ -244,16 +244,16 @@ void updateNodeList_ActiveNode(int nodeID, int state)
     {
 
       // We break out of the loop if the address of the noode already exists in the list
-      if (&n->id == serviceID)
+      if (n->id == serviceID)
       {
 
         // If this is the new active node update status
         if (serviceID == nodeID)
-          &n->state = state;
+          n->state = state;
 
         // If it is not the new active node, change its state
-        else if (&n->state == STATE_ACTIVE)
-          &n->state = STATE_ON;
+        else if (n->state == STATE_ACTIVE)
+          n->state = STATE_ON;
 
         break;
       }
@@ -265,8 +265,8 @@ void updateNodeList_ActiveNode(int nodeID, int state)
       n = memb_alloc(&nodes_memb);
 
       // Initialize the fields.
-      &n->id == serviceID;
-      &n->state = STATE_ON;
+      n->id == serviceID;
+      n->state = STATE_ON;
 
       // Place the node on the neighbor list.
       list_add(nodes_list, n);
@@ -284,9 +284,9 @@ void changeNodeSavedState(int nodeID, int state)
   {
 
     // We break out of the loop if the address of the noode already exists in the list
-    if (&n->id == nodeID)
+    if (n->id == nodeID)
     {
-      &n->id = state;
+      n->id = state;
        break;
     }
   }
