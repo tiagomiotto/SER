@@ -72,7 +72,7 @@ struct node
   */
   uint8_t state;
 };
-MEMB(nodes_memb, struct node, MAX_NEIGHBORS);
+MEMB(nodes_memb, struct node, MAX_NODES);
 LIST(nodes_list);
 
 void updateNodeList_ActiveNode(int nodeID, int state);
