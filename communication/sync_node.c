@@ -309,7 +309,7 @@ void changeNodeSavedState(int nodeID, int state)
     // We break out of the loop if the address of the noode already exists in the list
     if (n->id == nodeID)
     {
-      n->id = state;
+      n->state = state;
       break;
     }
   }
