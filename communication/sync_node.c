@@ -143,6 +143,10 @@ PROCESS_THREAD(handler_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
     //Verificar aqui, se madno uma coisa que não é um numero ele morre
     msg = (char *)data;
+    if(strstr(msg, ",") == NULL) {
+      printf("Invalid command\n");
+      continue;
+    }
     char *token = strtok(msg, ",");
     if (token == NULL)
     {
@@ -184,7 +188,7 @@ void search_list()
   struct node *n;
 
   //Cycle through all the nodes to find the node which changed state.
-  
+
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
     if (list_item_next(n) != NULL)
