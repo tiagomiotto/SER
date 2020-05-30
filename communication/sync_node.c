@@ -219,8 +219,15 @@ PROCESS_THREAD(message_received_handler, ev, data)
     int nodeID = strtol(token, &pEnd, 10);
     token = strtok(NULL, ",");
     int state = strtol(token, &pEnd, 10);
-    if(state == STATE_ACTIVE) updateNodeList_ActiveNode(nodeID, state);
-    else if(state == STATE_ON || state == STATE_OFF) changeNodeSavedState(nodeID, state);
+    if(state == STATE_ACTIVE) { 
+      printf("Update active node\n");
+      updateNodeList_ActiveNode(nodeID, state);
+    }
+
+    else if(state == STATE_ON || state == STATE_OFF) {
+      printf("Update on node\n"); 
+      changeNodeSavedState(nodeID, state);
+    }
   }
 
   PROCESS_END();
