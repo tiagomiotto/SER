@@ -42,7 +42,7 @@
 
 #include "messaging.h"
 #define UDP_PORT 1234
-volatile int myID=0;
+volatile uint8_t myID=0;
 
 #define SEND_INTERVAL (10 * CLOCK_SECOND)
 #define SEND_TIME (random_rand() % (SEND_INTERVAL) + (1 * CLOCK_SECOND))
