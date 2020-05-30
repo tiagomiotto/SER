@@ -64,9 +64,9 @@ struct node
   uint8_t id;
 
   /* The ->state field holds the state of the node 
-    0 - Off
-    1 - On
-    2 - Current active node
+    0 - STATE_OFF - ROUTER OVERIDE OFF
+    1 - STATE_ON - ROUTER FUNCTIONING NORMALLY
+    2 - STATE_ACTIVE - CURRENTLY ACTIVE ROUTER
   */
   uint8_t state;
 };
