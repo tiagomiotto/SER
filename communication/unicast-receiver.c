@@ -72,8 +72,8 @@ receiver(struct simple_udp_connection *c,
          receiver_port, sender_port, my_message.srcID, datalen, my_message.msg);
   my_message.destID=my_message.srcID;
   my_message.srcID=SERVICE_ID;
-  if(strcmp(my_message.msg, "on")==0) sendStateToSync(unicast_connection,STATE_ON, SERVICE_ID);
-  if(strcmp(my_message.msg, "off")==0) sendStateToSync(unicast_connection,STATE_OFF, SERVICE_ID);
+  if(strcmp(my_message.msg, "on")==0) sendStateToSync(unicast_connection,SERVICE_ID,STATE_ON );
+  if(strcmp(my_message.msg, "off")==0) sendStateToSync(unicast_connection,SERVICE_ID,STATE_ON);
 }
 /*---------------------------------------------------------------------------*/
 
