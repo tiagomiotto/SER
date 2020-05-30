@@ -60,11 +60,11 @@ void search_list();
 /*---------------------------------------------------------------------------*/
 
 PROCESS(handler_process, "Serial message handler process");
-PROCESS(serial_process, "Serial line test process");
+//PROCESS(serial_process, "Serial line test process");
 PROCESS(communications_process, "Network size check periodic process");
-PROCESS(message_received_handler, "Network size check periodic process");
+PROCESS(message_received_handler, "Network size check periodic proce ss");
 
-AUTOSTART_PROCESSES( &communications_process, &serial_process, &handler_process /*, &message_received_handler*/);
+AUTOSTART_PROCESSES( &communications_process,  &handler_process , &message_received_handler);
 
 /*--------------------Communications---------------------------------*/
 static void
@@ -91,8 +91,8 @@ PROCESS_THREAD(handler_process, ev, data)
 
   while (1)
   {
-      printf("Use info to get the state of the network or command to send commands\n");
-    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
+    printf("Use info to get the state of the network or command to send commands\n");
+    PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
 
     char *msg = (char *)data;
 
@@ -113,7 +113,7 @@ PROCESS_THREAD(handler_process, ev, data)
       continue;
     }
 
-    PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
+    PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
     //Verificar aqui, se madno uma coisa que não é um numero ele morre
     msg = (char *)data;
     char *token = strtok(msg, ",");
