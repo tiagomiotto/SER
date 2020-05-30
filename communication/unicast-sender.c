@@ -116,7 +116,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     etimer_set(&send_timer, SEND_TIME);
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
-    addr = servreg_hack_lookup(SERVICE_ID);
+    addr = servreg_hack_lookup(1);
     if(addr != NULL) {
       static unsigned int message_number;
       char buf[20];
@@ -124,24 +124,11 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
       printf("Sending unicast to ");
       uip_debug_ipaddr_print(addr);
       printf("\n");
-      sprintf(buf, "Message %d", message_number);
+      sprintf(buf, "190,2");
       message_number++;
       simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
-    } else {
-      printf("Service %d not found\n", SERVICE_ID);
-      static unsigned int message_number;
-      char buf[20];
-
-      printf("Sending unicast to %d: ", SERVICE_ID+1);
-      uip_debug_ipaddr_print(addr);
-      printf("\n");
-      sprintf(buf, "Message %d", message_number);
-      message_number++;
-      
-      addr = servreg_hack_lookup(SERVICE_ID+1);
-      simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
-
-    }
+    } 
+    
   }
 
   PROCESS_END();
