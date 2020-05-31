@@ -62,7 +62,7 @@ PROCESS(send_message_handler, "Send message to node(s)");
 PROCESS(receive_message_handler, "Handle received message");
 PROCESS(receive_message, "Receive message from node(s)");
 
-AUTOSTART_PROCESSES(&my_distance, &send_message_handler, &receive_message_handler, &receive_message);
+AUTOSTART_PROCESSES(&my_distance, &send_message_handler, /*&receive_message_handler*/, &receive_message);
 /******************************************************************************/
 static void receiver(struct simple_udp_connection *c,
 					 const uip_ipaddr_t *sender_addr,
@@ -150,7 +150,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 		if (STATUS == 1)
 		{
 			uip_create_linklocal_allnodes_mcast(&addr);
-			prepareMessage(&my_send_message, "", myID, 0, 2, distance);
+			prepareMessage(&my_send_message, "", myID, 0, 0, distance);
 			//printf(" %s, %d, %d, %d\n", my_send_message.data, my_send_message.destID, my_send_message.srcID, my_send_message.mode);
 			simple_udp_sendto(&unicast_connection, &my_send_message, sizeof(struct Message) + 1, &addr);
 		}
@@ -168,9 +168,10 @@ PROCESS_THREAD(receive_message, ev, data)
 	while (1)
 	{
 		PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
+        struct Message *inMsg = (struct Message *)data;
 		if (STATUS == 1)
 		{
-			struct Message *inMsg = (struct Message *)data;
+			
 			
 			
 			m = memb_alloc(&message_memb);
@@ -190,19 +191,18 @@ PROCESS_THREAD(receive_message, ev, data)
 		//is not active node
 		else
 		{
-			struct Message *inMsg = (struct Message *)data;
-			m->message = *inMsg;
+			
 
-			if (m->message.mode == 1)
+			if (inMsg->mode == 1)
 			{
 				//funtion to fake actuator
-				prepareMessage(&my_send_message, "", myID, m->message.destID, 2, 0);
+				prepareMessage(&my_send_message, "", myID, inMsg->destID, 2, 0);
 				sendMessage(unicast_connection, &my_send_message);
-				STATUS = 1;
+				//STATUS = 1;
 			}
 			else if (distance < m->message.distance)
 			{
-				prepareMessage(&my_send_message, "", myID, m->message.destID, 0, distance);
+				prepareMessage(&my_send_message, "", myID, inMsg->destID, 0, distance);
 				sendMessage(unicast_connection, &my_send_message);
 			}
 		}
