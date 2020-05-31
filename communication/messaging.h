@@ -19,7 +19,7 @@
 #define STATE_OFF 0
 #define STATE_ON 1
 #define STATE_ACTIVE 2
-#define SYNC_NODE_ID 0
+#define SYNC_NODE_ID 1
 
 struct Message
 {

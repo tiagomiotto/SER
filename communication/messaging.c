@@ -122,7 +122,7 @@ int registerConnection(int ID)
         create_rpl_dag(ipaddr);
     }
     else
-        ID = node_id;
+        ID = node_id+100;
     printf("My ID is: %d\n", ID);
     servreg_hack_register(ID, ipaddr);
 
