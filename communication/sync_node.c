@@ -172,7 +172,7 @@ PROCESS_THREAD(handler_process, ev, data)
     if (strcmp(token, "on") == 0 || strcmp(token, "off") == 0)
     {
 
-      my_message = prepareMessage(token, ID, destID, 3);
+      prepareMessage(&my_message,token, ID, destID, 3, 0);
       process_post(&communications_process,
                    PROCESS_EVENT_CONTINUE, &my_message);
     }
@@ -235,7 +235,7 @@ PROCESS_THREAD(message_received_handler, ev, data)
     messageRx = *inMsg;
     char *pEnd;
 
-    if (messageRx.code == 4)
+    if (messageRx.mode == 4)
     {
 
       updateNodeList_ActiveNode(messageRx.srcID, STATE_ACTIVE);
@@ -243,11 +243,11 @@ PROCESS_THREAD(message_received_handler, ev, data)
 
     }
 
-    else if (messageRx.code == 3)
+    else if (messageRx.mode == 3)
     {
       
-      if(strcmp(messageRx.msg,"on")==0) changeNodeSavedState(messageRx.srcID, STATE_ON);
-      if(strcmp(messageRx.msg,"off")==0) changeNodeSavedState(messageRx.srcID, STATE_OFF);
+      if(strcmp(messageRx.data,"on")==0) changeNodeSavedState(messageRx.srcID, STATE_ON);
+      if(strcmp(messageRx.data,"off")==0) changeNodeSavedState(messageRx.srcID, STATE_OFF);
     }
   }
 
