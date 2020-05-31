@@ -174,7 +174,7 @@ PROCESS_THREAD(receive_message, ev, data)
 			
 			m = memb_alloc(&message_memb);
 			m->message = *inMsg;
-			printf("%d\n",m->message.mode )
+			printf("%d\n",m->message.mode );
 			if (m->message.mode == 2)
 			{
 				STATUS = 0;
