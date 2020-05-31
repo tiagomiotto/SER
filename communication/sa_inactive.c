@@ -201,13 +201,13 @@ PROCESS_THREAD(receive_message, ev, data)
 			if (inMsg->mode == 1)
 			{
 				//funtion to fake actuator
-				prepareMessage(&my_send_message, "", myID, inMsg->destID, 2, 0);
+				prepareMessage(&my_send_message, "", myID, inMsg->srcID, 2, 0);
 				sendMessage(unicast_connection, &my_send_message);
 				//STATUS = 1;
 			}
 			else if (distance < inMsg->distance)
 			{
-				prepareMessage(&my_send_message, "", myID, inMsg->destID, 0, distance);
+				prepareMessage(&my_send_message, "", myID, inMsg->srcID, 0, distance);
 				sendMessage(unicast_connection, &my_send_message);
 			}
 		}
