@@ -189,7 +189,7 @@ PROCESS_THREAD(receive_message, ev, data)
         }
 
 		if(off) {
-			printf("Override off\n");
+			printf("I was turned off\n");
 			continue; 
 		}
 
@@ -210,8 +210,10 @@ PROCESS_THREAD(receive_message, ev, data)
             else if (m->message.mode == 0)
             {
                 list_add(message_list, m);
-                prepareMessage(&my_send_message, "", myID, m->message.srcID, 1, 0);
-                sendMessage(unicast_connection, &my_send_message);
+                process_post(&receive_message_handler,
+                PROCESS_EVENT_CONTINUE, data);
+                // prepareMessage(&my_send_message, "", myID, m->message.srcID, 1, 0);
+                // sendMessage(unicast_connection, &my_send_message);
             }
         }
         //is not active node

@@ -205,9 +205,11 @@ PROCESS_THREAD(receive_message, ev, data)
 				sendMessage(unicast_connection, &my_send_message);
 			}
 			else if (m->message.mode == 0){
-				list_add(message_list, m);
-				prepareMessage(&my_send_message, "", myID, m->message.srcID, 1, 0);
-				sendMessage(unicast_connection, &my_send_message);
+                list_add(message_list, m);
+                process_post(&receive_message_handler,
+                PROCESS_EVENT_CONTINUE, data);
+                // prepareMessage(&my_send_message, "", myID, m->message.srcID, 1, 0);
+                // sendMessage(unicast_connection, &my_send_message);
 				}
 		}
 		//is not active node
