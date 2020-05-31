@@ -65,14 +65,6 @@ static void receiver(struct simple_udp_connection *c,
 					 const uint8_t *data,
 					 uint16_t datalen)
 {
-
-	// printf("Data received from ");
-	// uip_debug_ipaddr_print(sender_addr);
-	// struct Message *inMsg = (struct Message *)data;
-	// my_received_message = *inMsg;
-	// printf(" on port %d from portS %d, with ID %d, with length %d: '%d'\n",
-	// 	   receiver_port, sender_port, my_received_message.srcID, datalen, my_received_message.mode);
-
 	process_post(&receive_message,
 				 PROCESS_EVENT_CONTINUE, data);
 }

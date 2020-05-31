@@ -116,13 +116,15 @@ receiver(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  //printf("Data received on port %d from port %d with length %d : %s\n",
-        // receiver_port, sender_port, datalen, (char *)data);
+
   process_post(&message_received_handler,
                PROCESS_EVENT_CONTINUE, data);
 }
 
 /*----------------------------SERIAL HANDLING----------------------------------*/
+/* A process to handle the serial input and allow the operator to get the information
+on the state of the network and send On/OFF commands to the nodes*/
+
 PROCESS_THREAD(handler_process, ev, data)
 {
 
@@ -154,7 +156,7 @@ PROCESS_THREAD(handler_process, ev, data)
     }
 
     PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
-    //Verificar aqui, se madno uma coisa que não é um numero ele morre
+    
     msg = (char *)data;
     if (strstr(msg, ",") == NULL)
     {
@@ -186,6 +188,7 @@ PROCESS_THREAD(handler_process, ev, data)
 }
 
 /*-----------------------------NODE CHECK----------------------------*/
+/* A function to get the nodes active in the network*/
 void search_list()
 {
 
@@ -203,7 +206,7 @@ void search_list()
 }
 
 /*-------------------------Unicast Sender Proccess--------------------------------*/
-
+/* A proccess to handle the communications from the sync node to the other nodes*/
 PROCESS_THREAD(communications_process, ev, data)
 {
 
@@ -218,13 +221,11 @@ PROCESS_THREAD(communications_process, ev, data)
   while (1)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
-    struct Message *my_messageRX = data;
-    sendMessage(unicast_connection, my_messageRX);
   }
 
   PROCESS_END();
 }
-
+/* A process to handle the received messages from the nodes and act accordingly*/
 PROCESS_THREAD(message_received_handler, ev, data)
 {
 
@@ -237,6 +238,7 @@ PROCESS_THREAD(message_received_handler, ev, data)
     messageRx = *inMsg;
     char *pEnd;
 
+    // Message received when the active node changes
     if (messageRx.mode == 4)
     {
 
@@ -246,7 +248,7 @@ PROCESS_THREAD(message_received_handler, ev, data)
       //updateNodesDistances(messageRx.msg);
 
     }
-
+    // Message received as a response to an ON/OFF command
     else if (messageRx.mode == 3)
     {
       
@@ -258,6 +260,7 @@ PROCESS_THREAD(message_received_handler, ev, data)
   PROCESS_END();
 }
 
+// Function that updates the nodes list and sets the active node
 bool updateNodeList_ActiveNode(int nodeID, int state)
 {
   servreg_hack_item_t *item;
@@ -316,6 +319,7 @@ bool updateNodeList_ActiveNode(int nodeID, int state)
   purgeNodeList();
 }
 
+/* Function that updates the state(ON/OFF) of the node that received the command*/
 void changeNodeSavedState(int nodeID, int state)
 {
   struct node *n;
@@ -333,6 +337,7 @@ void changeNodeSavedState(int nodeID, int state)
   }
 }
 
+/* Simple function to find a node in the list*/
 struct node* searchInList(int nodeID){
   struct node *n;
   //Cycle through all the nodes to find the node which changed state.
@@ -347,6 +352,7 @@ struct node* searchInList(int nodeID){
   }
   return NULL;
 }
+/* Simple function to delete a node from the list when it is no longer active*/
 void deleteNode(int nodeID)
 {
   struct node *n;
@@ -355,6 +361,7 @@ void deleteNode(int nodeID)
   memb_free(&nodes_memb, n);
 }
 
+/* Simple function to delete the entire list and free memory*/
 void deleteList()
 {
   struct node *n;
@@ -367,7 +374,8 @@ void deleteList()
   }
 }
 
-
+/* Function to purge the node list, by checking which ones are still reachable and removing,
+those who are not*/
 void purgeNodeList(){
     
   struct node *n;
@@ -386,6 +394,9 @@ void purgeNodeList(){
   
 }
 
+/* Function to update the distance of the nodes
+The purpouse of this function was to expand on the information kept on the network,
+but in the end it wasn't implemented*/
 void updateNodesDistances(char* msg){
   char *token;
   char *token2;
@@ -408,6 +419,7 @@ void updateNodesDistances(char* msg){
   }
 }
 
+/* Print the network state for the info command*/
 void printNetworkInfo(){
    struct node *n;
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
