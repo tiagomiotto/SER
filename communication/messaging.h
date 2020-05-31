@@ -11,7 +11,7 @@
 #include "lib/random.h"
 #include "sys/ctimer.h"
 #include "sys/etimer.h"
-
+#include "net/rime/rime.h"
 
 
 #define DELAY_MAX (random_rand() % (20 * CLOCK_SECOND) + (5 * CLOCK_SECOND))
