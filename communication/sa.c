@@ -138,12 +138,12 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
 
-	myID = registerConnection(ID);
-
-	  printf("Delay max %d\n", DELAY_MAX);
+                          printf("Delay max %d\n", DELAY_MAX);
   static struct etimer timer;
   etimer_set(&timer, DELAY_MAX);
   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+
+	myID = registerConnection(ID);
 
 	//SENSORS_ACTIVATE(button_sensor);
 	etimer_set(&et, CLOCK_SECOND * 30);
@@ -197,7 +197,7 @@ PROCESS_THREAD(receive_message, ev, data)
 		else
 		{
 			
-
+            printf("Mode received: %d\n", )
 			if (inMsg->mode == 1)
 			{
 				//funtion to fake actuator
@@ -205,7 +205,7 @@ PROCESS_THREAD(receive_message, ev, data)
 				sendMessage(unicast_connection, &my_send_message);
 				//STATUS = 1;
 			}
-			else if (distance < m->message.distance)
+			else if (distance < inMsg->distance)
 			{
 				prepareMessage(&my_send_message, "", myID, inMsg->destID, 0, distance);
 				sendMessage(unicast_connection, &my_send_message);

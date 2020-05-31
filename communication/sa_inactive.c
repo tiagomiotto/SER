@@ -197,7 +197,7 @@ PROCESS_THREAD(receive_message, ev, data)
 		else
 		{
 			
-
+            printf("Mode received: %d\n", )
 			if (inMsg->mode == 1)
 			{
 				//funtion to fake actuator
@@ -205,7 +205,7 @@ PROCESS_THREAD(receive_message, ev, data)
 				sendMessage(unicast_connection, &my_send_message);
 				//STATUS = 1;
 			}
-			else if (distance < m->message.distance)
+			else if (distance < inMsg->distance)
 			{
 				prepareMessage(&my_send_message, "", myID, inMsg->destID, 0, distance);
 				sendMessage(unicast_connection, &my_send_message);
