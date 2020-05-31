@@ -197,7 +197,7 @@ PROCESS_THREAD(receive_message, ev, data)
 		else
 		{
 			
-            printf("Mode received: %d\n", )
+            printf("Mode received: %d\n", inMsg->mode);
 			if (inMsg->mode == 1)
 			{
 				//funtion to fake actuator
