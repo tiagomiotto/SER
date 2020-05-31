@@ -304,7 +304,7 @@ bool updateNodeList_ActiveNode(int nodeID, int state)
       list_add(nodes_list, n);
     }
   }
-  purgeNodeList();
+  deleteNode(191);
 }
 
 void changeNodeSavedState(int nodeID, int state)
