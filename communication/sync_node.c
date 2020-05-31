@@ -394,6 +394,7 @@ void purgeNodeList(){
 void updateNodesDistances(char* msg){
   char *token;
   char *token2;
+  char *pEnd;
   struct node *n;
  
    /* get the first token */
