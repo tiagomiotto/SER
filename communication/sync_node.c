@@ -368,5 +368,5 @@ void purgeNodeList(){
     memb_free(&nodes_memb, n);
   }
   }
-  printf("List purged \n");
+  
 }
