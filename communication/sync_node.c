@@ -69,6 +69,8 @@ struct node
     2 - STATE_ACTIVE - CURRENTLY ACTIVE ROUTER
   */
   uint8_t state;
+
+  int distance;
 };
 MEMB(nodes_memb, struct node, MAX_NODES);
 LIST(nodes_list);
@@ -87,6 +89,7 @@ volatile int nodesListSize=0;
 static struct simple_udp_connection unicast_connection;
 
 struct Message my_message;
+struct Message messageRx;
 
 volatile int activeNode = 0;
 
@@ -167,7 +170,7 @@ PROCESS_THREAD(handler_process, ev, data)
     if (strcmp(token, "on") == 0 || strcmp(token, "off") == 0)
     {
 
-      my_message = prepareMessage(token, ID, destID, 1);
+      my_message = prepareMessage(token, ID, destID, 3);
       process_post(&communications_process,
                    PROCESS_EVENT_CONTINUE, &my_message);
     }
@@ -226,23 +229,22 @@ PROCESS_THREAD(message_received_handler, ev, data)
   while (1)
   {
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
-    char *msg = (char *)data;
-    char *token = strtok(msg, ",");
-    char *pEnd;
-    int nodeID = strtol(token, &pEnd, 10);
-    token = strtok(NULL, ",");
-    int state = strtol(token, &pEnd, 10);
+    struct Message *inMsg = (struct Message *)data;
+    messageRx = *inMsg;
+    
 
-    if (state == STATE_ACTIVE)
+    if (messageRx.code == 4)
     {
 
-      updateNodeList_ActiveNode(nodeID, state);
+      updateNodeList_ActiveNode(messageRx.srcID, STATE_ACTIVE);
+      updateNodesDistances(messageRx.msg);
+
     }
 
-    else if (state == STATE_ON || state == STATE_OFF)
+    else if (messageRx.code == 3)
     {
- 
-      changeNodeSavedState(nodeID, state);
+      int state = strtol(messageRx.msg, &pEnd, 10);
+      changeNodeSavedState(messageRx.srcID, state);
     }
   }
 
@@ -254,8 +256,8 @@ bool updateNodeList_ActiveNode(int nodeID, int state)
   servreg_hack_item_t *item;
   struct node *n;
 
-  if (nodeID == activeNode)
-    return false;
+  // if (nodeID == activeNode)
+  //   return false;
   //Cycle through all the nodes to update the list, adding those missing and updating the node
   for (item = servreg_hack_list_head();
        item != NULL;
@@ -324,8 +326,7 @@ void changeNodeSavedState(int nodeID, int state)
   }
 }
 
-void deleteNode(int nodeID)
-{
+struct node* searchInList(int nodeID){
   struct node *n;
   //Cycle through all the nodes to find the node which changed state.
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
@@ -334,11 +335,29 @@ void deleteNode(int nodeID)
     // We break out of the loop if the address of the noode already exists in the list
     if (n->id == nodeID)
     {
-      list_remove(nodes_list, n);
-      memb_free(&nodes_memb, n);
-      break;
+      return n;
     }
   }
+  return NULL;
+}
+void deleteNode(int nodeID)
+{
+  struct node *n;
+  n = searchInList(nodeID);
+  list_remove(nodes_list, n);
+  memb_free(&nodes_memb, n);
+  // //Cycle through all the nodes to find the node which changed state.
+  // for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
+  // {
+
+  //   // We break out of the loop if the address of the noode already exists in the list
+  //   if (n->id == nodeID)
+  //   {
+  //     list_remove(nodes_list, n);
+  //     memb_free(&nodes_memb, n);
+  //     break;
+  //   }
+  // }
 }
 
 void deleteList()
@@ -352,6 +371,7 @@ void deleteList()
     memb_free(&nodes_memb, n);
   }
 }
+
 
 void purgeNodeList(){
     
@@ -369,4 +389,25 @@ void purgeNodeList(){
   }
   }
   
+}
+
+void updateNodesDistances(char* msg){
+  char *token;
+  char *token2;
+  struct node *n;
+ 
+   /* get the first token */
+  token = strtok(msg, ";");
+
+  while(token != NULL){
+
+    token2 = strtok(token,",");
+    int destID = strtol(token2, &pEnd, 10);
+    token2 = strtok(NULL, ",");
+    int dist = strtol(token2, &pEnd, 10);
+    n= searchInList(destID);
+    n->distance=dist;
+
+    token = strtok(NULL, ";");
+  }
 }
