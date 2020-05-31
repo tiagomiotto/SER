@@ -72,7 +72,7 @@ receiver(struct simple_udp_connection *c,
          receiver_port, sender_port, my_message.srcID, datalen, my_message.data);
   my_message.destID=my_message.srcID;
   my_message.srcID=myID;
-  my_message.mode=3;
+  my_message.mode=2;
   sendMessage(unicast_connection,
                  &my_message);
 }
