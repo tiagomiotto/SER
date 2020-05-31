@@ -87,7 +87,7 @@ static void receiver(struct simple_udp_connection *c,
 int generate_random_distance(int pos)
 {
 	time_t t;
-	srand((unsigned)time(&t));
+	srand(myID);
 	int new_pos;
 
 	int pos_array[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0,
