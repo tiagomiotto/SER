@@ -32,7 +32,7 @@
 #define ID 0
 
 int STATUS = 1; // 0 if not active 1 if active
-voltatile int distance;
+volatile int distance;
 int myID;
 struct Message my_received_message; //Not active
 struct Message my_send_message;
