@@ -137,7 +137,7 @@ PROCESS_THREAD(handler_process, ev, data)
 
     if (strcmp(msg, "info") == 0)
     {
-      printf("The current state of the system is\n";
+      printf("The current state of the system is\n");
       printNetworkInfo();
       continue;
     }
