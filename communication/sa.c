@@ -96,7 +96,7 @@ int generate_random_distance(int pos) {
 	}
 	if(new_pos < 0)
 	new_pos = abs(new_pos);
-
+	printf("%d\n", new_pos);
 	return new_pos;
 }
 /*--------------------------------------------------------------------DISTANCE*/
