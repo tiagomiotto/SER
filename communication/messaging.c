@@ -10,7 +10,7 @@ void sendMessage(struct simple_udp_connection connection,
 
         printf("Sending unicast to ");
         uip_debug_ipaddr_print(addr);
-        printf(" %s, %d, %d, %d\n", messageTX->msg, messageTX->destID, messageTX->srcID, messageTX->mode);
+        printf(" %s, %d, %d, %d\n", messageTX->data, messageTX->destID, messageTX->srcID, messageTX->mode);
         simple_udp_sendto(&connection, messageTX, sizeof(struct Message) + 1, addr);
     }
     else
@@ -38,7 +38,7 @@ void sendStateToSync(struct simple_udp_connection connection, int mydID, int sta
 void prepareMessage(struct Message* messageTx,char *data, int srcID, int destID, int mode, int distance)
 {
     
-    strcpy(messageTx->msg, data);
+    strcpy(messageTx->data, data);
     messageTx->srcID = srcID;
     messageTx->destID = destID;
     messageTx->mode = mode;
