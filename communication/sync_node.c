@@ -75,6 +75,12 @@ LIST(nodes_list);
 
 bool updateNodeList_ActiveNode(int nodeID, int state);
 void changeNodeSavedState(int nodeID, int state);
+void deleteNode(int nodeID);
+void deleteList();
+void purgeNodeList();
+
+volatile int servHackListSize = 0;
+volatile int nodesListSize=0;
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
@@ -82,7 +88,7 @@ static struct simple_udp_connection unicast_connection;
 
 struct Message my_message;
 
-volatile int activeNode =0;
+volatile int activeNode = 0;
 
 void search_list();
 
@@ -143,7 +149,8 @@ PROCESS_THREAD(handler_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(ev == serial_line_event_message);
     //Verificar aqui, se madno uma coisa que não é um numero ele morre
     msg = (char *)data;
-    if(strstr(msg, ",") == NULL) {
+    if (strstr(msg, ",") == NULL)
+    {
       printf("Invalid command\n");
       continue;
     }
@@ -183,9 +190,9 @@ void search_list()
   {
     if (list_item_next(n) != NULL)
       printf("%d | %d, ", n->id, n->state);
-      else printf("%d | %d \n", n->id, n->state);
+    else
+      printf("%d | %d \n", n->id, n->state);
   }
-
 }
 
 /*-------------------------Unicast Sender Proccess--------------------------------*/
@@ -225,14 +232,16 @@ PROCESS_THREAD(message_received_handler, ev, data)
     int nodeID = strtol(token, &pEnd, 10);
     token = strtok(NULL, ",");
     int state = strtol(token, &pEnd, 10);
-    printf("%d,%d\n", nodeID,state);
-    if(state == STATE_ACTIVE) { 
-      printf("Update active node\n");
+
+    if (state == STATE_ACTIVE)
+    {
+
       updateNodeList_ActiveNode(nodeID, state);
     }
 
-    else if(state == STATE_ON || state == STATE_OFF) {
-      printf("Update on node\n"); 
+    else if (state == STATE_ON || state == STATE_OFF)
+    {
+ 
       changeNodeSavedState(nodeID, state);
     }
   }
@@ -245,22 +254,24 @@ bool updateNodeList_ActiveNode(int nodeID, int state)
   servreg_hack_item_t *item;
   struct node *n;
 
-  if(nodeID==activeNode) return false;
+  if (nodeID == activeNode)
+    return false;
   //Cycle through all the nodes to update the list, adding those missing and updating the node
   for (item = servreg_hack_list_head();
        item != NULL;
        item = list_item_next(item))
   {
-    
+
     int serviceID = servreg_hack_item_id(item);
-    
+
     //Don't add the sync node
-    if(serviceID==1) continue;
+    if (serviceID == 1)
+      continue;
 
     // Check if we already know this neighbor.
     for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
     {
-      
+
       // We break out of the loop if the address of the noode already exists in the list
       if (n->id == serviceID)
       {
@@ -281,12 +292,13 @@ bool updateNodeList_ActiveNode(int nodeID, int state)
     if (n == NULL)
     {
       n = memb_alloc(&nodes_memb);
- 
+
       // Initialize the fields.
       n->id = serviceID;
-      if(serviceID == nodeID) n->state = STATE_ACTIVE;
-      else n->state = STATE_ON;
-  
+      if (serviceID == nodeID)
+        n->state = STATE_ACTIVE;
+      else
+        n->state = STATE_ON;
 
       // Place the node on the node list.
       list_add(nodes_list, n);
@@ -308,5 +320,55 @@ void changeNodeSavedState(int nodeID, int state)
       n->state = state;
       break;
     }
+  }
+}
+
+void deleteNode(int nodeID)
+{
+  struct node *n;
+  //Cycle through all the nodes to find the node which changed state.
+  for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
+  {
+
+    // We break out of the loop if the address of the noode already exists in the list
+    if (n->id == nodeID)
+    {
+      list_remove(nodes_list, n);
+      memb_free(&nodes_memb, n);
+      break;
+    }
+  }
+}
+
+void deleteList()
+{
+  struct node *n;
+  //Cycle through all the nodes to find the node which changed state.
+  for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
+  {
+
+    list_remove(nodes_list, n);
+    memb_free(&nodes_memb, n);
+  }
+}
+
+void purgeNodeList(){
+    
+  struct node *n;
+
+  //Cycle through all the nodes to find the node which changed state.
+  for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
+  {
+    for (item = servreg_hack_list_head();
+       item != NULL;
+       item = list_item_next(item))
+    {
+     
+    if(n->id == servreg_hack_item_id(item)) break;
+    }
+
+  if(item==NULL) {
+    list_remove(nodes_list, n);
+    memb_free(&nodes_memb, n);
   }
 }
