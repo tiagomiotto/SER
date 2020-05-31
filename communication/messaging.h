@@ -13,7 +13,7 @@
 #include "sys/etimer.h"
 #include "net/rime/rime.h"
 #include "node-id.h"
-
+#include "leds.h"
 
 #define DELAY_MAX (random_rand() % (15 * CLOCK_SECOND) + (5 * CLOCK_SECOND)) *2
 #define STATE_OFF 0

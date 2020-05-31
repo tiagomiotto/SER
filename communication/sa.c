@@ -47,16 +47,8 @@ struct message_list
 
 MEMB(message_memb, struct message_list, MAX_NODES);
 LIST(message_list);
-
-// void prepareMessage(struct Message *message, char* msg, uint8_t srcID,
-// 	uint8_t destID, uint8_t mode, uint8_t distance) {
-
-//     message.srcID = srcID;
-//     message.destID = destID;
-//     message.mode = mode;
-// 	message.distance = distance;
-// }
-
+void deleteList();
+void actuator();
 /******************************************************************************/
 PROCESS(my_distance, "Measure my distance to the target");
 PROCESS(send_message_handler, "Send message to node(s)");
@@ -74,17 +66,19 @@ static void receiver(struct simple_udp_connection *c,
 					 uint16_t datalen)
 {
 
-	printf("Data received from ");
-	uip_debug_ipaddr_print(sender_addr);
-	struct Message *inMsg = (struct Message *)data;
-	my_received_message = *inMsg;
-	printf(" on port %d from port %d, with ID %d, with length %d: '%d'\n",
-		   receiver_port, sender_port, my_received_message.srcID, datalen, my_received_message.mode);
+	// printf("Data received from ");
+	// uip_debug_ipaddr_print(sender_addr);
+	// struct Message *inMsg = (struct Message *)data;
+	// my_received_message = *inMsg;
+	// printf(" on port %d from portS %d, with ID %d, with length %d: '%d'\n",
+	// 	   receiver_port, sender_port, my_received_message.srcID, datalen, my_received_message.mode);
 
 	process_post(&receive_message,
 				 PROCESS_EVENT_CONTINUE, data);
 }
 /******************************************************************************/
+/* A function to simulate the data given from the distance sensor, since we are working
+ inside a simulator*/
 int generate_random_distance(int pos)
 {
 	time_t t;
@@ -110,7 +104,8 @@ int generate_random_distance(int pos)
 	printf("Target distance: %d\n", new_pos);
 	return new_pos;
 }
-/*--------------------------------------------------------------------DISTANCE*/
+/*----------------DISTANCE------------------*/
+/* A Proccess responsible to periodically read the distance from the sensor*/
 PROCESS_THREAD(my_distance, ev, data)
 {
 
@@ -129,6 +124,9 @@ PROCESS_THREAD(my_distance, ev, data)
 	}
 	PROCESS_END();
 }
+
+/* A Proccess responsible to periodically send the broadcast message if it is the
+  active node*/
 PROCESS_THREAD(send_message_handler, ev, data)
 {
 	PROCESS_BEGIN();
@@ -150,7 +148,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 		printf("I'm the starting active\n");
 		STATUS = 1;
 
-		prepareMessage(&my_send_message, "", myID, SYNC_NODE_ID, 4, 0);
+		prepareMessage(&my_send_message, "", myID, 1, 4, 0);
 		while(!sendMessage(unicast_connection, &my_send_message)){
 			printf("Waiting a little more and trying again\n");
 			etimer_set(&timer, DELAY_MAX);
@@ -176,7 +174,8 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	PROCESS_END();
 }
 
-/*-------------------------------------------------------------RECEIVE_MESSAGE*/
+/*--------RECEIVE_MESSAGE--------------------*/
+/* Proccess to handle the multiple types of message received*/
 PROCESS_THREAD(receive_message, ev, data)
 {
 
@@ -188,6 +187,7 @@ PROCESS_THREAD(receive_message, ev, data)
 		PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
 		struct Message *inMsg = (struct Message *)data;
 
+		// Handle the ON/OFF message from the sync node
 		if (inMsg->mode == 3 && inMsg->srcID == SYNC_NODE_ID)
 		{
 			if (strcmp(inMsg->data, "on") == 0)
@@ -198,12 +198,14 @@ PROCESS_THREAD(receive_message, ev, data)
 			sendMessage(unicast_connection, &my_send_message);
 		}
 
+		// If turned off by the sync node, I can't become active, so the messages
+		// from the active node aren't supposed to be read
 		if (off)
 		{
 			printf("I was turned off\n");
 			continue;
 		}
-
+		//is the active node
 		if (STATUS == 1)
 		{
 
@@ -212,35 +214,42 @@ PROCESS_THREAD(receive_message, ev, data)
 
 			if (m->message.mode == 2)
 			{
+				// The new active node is setup, turn off my router and let the sync node know
+				// who is the new active node	
+				actuatorHandler(0);
 				STATUS = 0;
 				char buffer[10];
 				sprintf(buffer, "%d,%d", m->message.srcID, 2);
 				prepareMessage(&my_send_message, buffer, m->message.srcID, SYNC_NODE_ID, 4, 0);
 				sendMessage(unicast_connection, &my_send_message);
+				deleteList();
 			}
 			else if (m->message.mode == 0)
 			{
+				// A node responded to my broadcast that it has a smaller distance to target than me
+				// add it to the list and let the other proccess know that there is at least one message
+				// in the list
 				list_add(message_list, m);
 				process_post(&receive_message_handler,
 							 PROCESS_EVENT_CONTINUE, data);
-				// prepareMessage(&my_send_message, "", myID, m->message.srcID, 1, 0);
-				// sendMessage(unicast_connection, &my_send_message);
+
 			}
 		}
 		//is not active node
 		else
 		{
-
-			printf("Mode received: %d\n", inMsg->mode);
 			if (inMsg->mode == 1)
 			{
-				//funtion to fake actuator
+				// I'm the new active node, turn on my router and let the previous active node
+				// that it can turn of it's router
+				actuatorHandler(1);
 				prepareMessage(&my_send_message, "", myID, inMsg->srcID, 2, 0);
 				sendMessage(unicast_connection, &my_send_message);
 				STATUS = 1;
 			}
 			else if (distance < inMsg->distance)
 			{
+				// My distance to target is smaller then the active node's, respond to its message
 				prepareMessage(&my_send_message, "", myID, inMsg->srcID, 0, distance);
 				sendMessage(unicast_connection, &my_send_message);
 			}
@@ -248,7 +257,12 @@ PROCESS_THREAD(receive_message, ev, data)
 	}
 	PROCESS_END();
 }
-/*-----------------------------------------------------RECEIVE_MESSAGE_HANDLER*/
+/*-------------------RECEIVE_MESSAGE_HANDLER-----------------------*/
+/* This proccess is here to manipulate the list of mesages received. Since the 
+active node broadcasts its distance to target and waits for responses from the other nodes, who verify
+their distance is smaller then the active node, therefore this proccess is intended to wait until a timer expires, to collect all the messages and then
+iterate through the distances from the ones who responded to identify the one that is the smallest and communicate to that
+node that it will be the new active node*/
 PROCESS_THREAD(receive_message_handler, ev, data)
 {
 
@@ -278,13 +292,57 @@ PROCESS_THREAD(receive_message_handler, ev, data)
 
 		if (min_distance_p != NULL)
 		{
-			// if ((float)min_distance_p->message.distance / distance < 0.75)
-			// {
+
 			printf("Sending message to new active node \n");
 			prepareMessage(&my_send_message, "", myID, min_distance_p->message.srcID, 1, 0);
 			sendMessage(unicast_connection, &my_send_message);
-			//}
+
 		}
 	}
 	PROCESS_END();
+}
+
+
+
+void actuatorOn(){
+	// Here we calculate 10000 numbers of the Fibonnaci sequence in order
+	// to simulate the time needed for the actuator to be turned on, which in
+	// the case of using a relay circuit to turn on a wireless router for the
+	// target to connect, would be the time to activate the relay and measure the 
+	// current flowing into the router or verifying that the startup sequence of
+	// the router is complete
+	int i, n, t1 = 0, t2 = 1, nextTerm;
+
+    for (i = 1; i <= 10000; ++i) {
+        printf("%d, ", t1);
+        nextTerm = t1 + t2;
+        t1 = t2;
+        t2 = nextTerm;
+    }
+	leds_on(LEDS_ALL);
+}
+
+
+void actuatorOff(){
+	// Here it is not necessary to simulate the time for the actuator to work
+	// since we would just change the voltage value of an analog pin on the board
+	// to change the relay state, which would be almost instananeous
+	leds_off(LEDS_ALL);
+}
+
+void actuatorHandler(int state){
+	if(state==0) actuatorOff();
+	if(state==1) actuatorOn();	
+}
+
+void deleteList()
+{
+  struct node *n;
+  //Cycle through all the nodes to clear
+  for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
+  {
+
+    list_remove(message_list, n);
+    memb_free(&message_memb, n);
+  }
 }
