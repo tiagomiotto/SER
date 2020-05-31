@@ -81,7 +81,7 @@ void deleteNode(int nodeID);
 void deleteList();
 void purgeNodeList();
 void updateNodesDistances(char* msg);
-struct node* searchInList(int nodeID)
+struct node* searchInList(int nodeID);
 
 // volatile int servHackListSize = 0;
 // volatile int nodesListSize=0;
