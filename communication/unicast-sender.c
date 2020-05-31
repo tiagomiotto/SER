@@ -50,7 +50,7 @@
 #define SEND_TIME		(random_rand() % (SEND_INTERVAL))
 
 static struct simple_udp_connection unicast_connection;
-
+struct Message my_message;
 /*---------------------------------------------------------------------------*/
 PROCESS(unicast_sender_process, "Unicast sender example process");
 AUTOSTART_PROCESSES(&unicast_sender_process);
@@ -87,9 +87,8 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
   
-  struct Message my_message = prepareMessage("",  190, 1,  4);
+  my_message = prepareMessage("",  190, 1,  4);
   
- 
 
 
 
