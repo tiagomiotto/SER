@@ -29,7 +29,7 @@
 #define MAX_NODES 255
 #define UDP_PORT 1234
 #define UNICAST_PORT 1235
-#define ID 0
+#define ID 100
 
 int STATUS = 0; // 0 if not active 1 if active
 volatile int distance;
