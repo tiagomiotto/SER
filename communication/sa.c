@@ -145,13 +145,17 @@ PROCESS_THREAD(send_message_handler, ev, data)
   	static struct etimer timer;
   	etimer_set(&timer, DELAY_MAX);
   	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
-	if (myID == 101 || myID ==102) //Caso o sync seja iniciado primeiro
+	if (myID == 101 || myID == 102) //Caso o sync seja iniciado primeiro
 	{
 		printf("I'm the starting active\n");
 		STATUS = 1;
 
 		prepareMessage(&my_send_message, "", myID, SYNC_NODE_ID, 4, 0);
-		sendMessage(unicast_connection, &my_send_message);
+		while(!sendMessage(unicast_connection, &my_send_message)){
+			printf("Waiting a little more and trying again\n");
+			etimer_set(&timer, DELAY_MAX);
+  			PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+		}
 	}
 
 	//SENSORS_ACTIVATE(button_sensor);

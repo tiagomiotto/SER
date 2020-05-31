@@ -30,7 +30,7 @@ struct Message
   int distance;
 };
 
-void sendMessage(struct simple_udp_connection connection,
+bool sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX);
 
 void prepareMessage(struct Message* message,char* data, int srcID,int destID, int mode, int distance);

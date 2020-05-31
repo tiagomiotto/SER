@@ -1,6 +1,6 @@
 #include "messaging.h"
 
-void sendMessage(struct simple_udp_connection connection,
+bool sendMessage(struct simple_udp_connection connection,
                  struct Message *messageTX)
 {
     uip_ipaddr_t *addr;
@@ -12,10 +12,12 @@ void sendMessage(struct simple_udp_connection connection,
         uip_debug_ipaddr_print(addr);
         printf(" %s, %d, %d, %d\n", messageTX->data, messageTX->destID, messageTX->srcID, messageTX->mode);
         simple_udp_sendto(&connection, messageTX, sizeof(struct Message) + 1, addr);
+        return true;
     }
     else
     {
         printf("Service %d not found\n", messageTX->destID);
+        return false;
     }
 }
 
