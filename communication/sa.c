@@ -267,7 +267,7 @@ PROCESS_THREAD(receive_message_handler, ev, data)
            // if ((float)min_distance_p->message.distance / distance < 0.75)
            // {
                printf("Sending message to new active node \n");
-                prepareMessage(&my_send_message, "", myID, min_distance_p->message.destID, 1, 0);
+                prepareMessage(&my_send_message, "", myID, min_distance_p->message.srcID, 1, 0);
                 sendMessage(unicast_connection, &my_send_message);
             //}
 		}
