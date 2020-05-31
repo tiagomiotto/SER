@@ -421,7 +421,8 @@ void updateNodesDistances(char* msg){
 }
 
 void printNetworkInfo(){
- 
+   struct node *n;
+
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
 
