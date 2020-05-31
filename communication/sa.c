@@ -31,7 +31,7 @@
 #define UNICAST_PORT 1235
 #define ID 0
 
-int STATUS = 1; // 0 if not active 1 if active
+int STATUS = 0; // 0 if not active 1 if active
 volatile int distance;
 int myID;
 bool off=false;
@@ -119,7 +119,7 @@ PROCESS_THREAD(my_distance, ev, data)
 	static struct etimer et;
 	time_t t;
 
-	srand((unsigned)time(&t));
+	srand(myID);
 	distance = rand() % 20;
 	while (1)
 	{
@@ -146,7 +146,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 //   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
 	myID = registerConnection(ID);
-
+	if(myID==2) STATUS=1;
 	//SENSORS_ACTIVATE(button_sensor);
 	etimer_set(&et, CLOCK_SECOND * 30);
 	while (1)
