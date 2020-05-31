@@ -86,8 +86,8 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
                       NULL, UDP_PORT, receiver);
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
-  uint8_t test=1;
-  struct Message my_message = prepareMessage("",  190, test,  4);
+  
+  struct Message my_message = prepareMessage("",  190, 1,  4);
   
  
 
