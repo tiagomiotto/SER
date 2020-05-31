@@ -30,15 +30,25 @@ struct Message
   int distance;
 };
 
+// Function used to send the Message struct using UDP messages
 bool sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX);
 
+// Function used to populate the structure
 void prepareMessage(struct Message* message,char* data, int srcID,int destID, int mode, int distance);
 
+// Function to set the IPv6 address of the node
 uip_ipaddr_t* set_global_address(void);
 
+//Function to create the RPL Dag routing
 void create_rpl_dag(uip_ipaddr_t *ipaddr);
 
+/* Function called by all the nodes to obtain a IP adress and a ID, and register
+ that ID as a service in the servreg_hack_register. In the case of the sync node,
+ it also creates the RPL Dag, in order to be the router for the messages in the network
+ creating a star Architecture*/
 int registerConnection(int ID);
 
+/* Simple function to send a change in state to the sync, in the final version it
+ended up unused.*/
 void sendStateToSync(struct simple_udp_connection connection, int mydID, int state);
