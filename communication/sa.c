@@ -253,8 +253,8 @@ PROCESS_THREAD(receive_message_handler, ev, data)
 
 		for (n = list_head(message_list); n != NULL; n = list_item_next(n))
 		{
-			printf("My distance %d, node distance %d, min dist %d\n", 
-			distance, n->message.distance, min_distance);
+            printf("My distance %d, node distance %d is  %d, min dist %d\n", 
+			distance, n->message.srcID, n->message.distance, min_distance);
 			if (n->message.distance < min_distance && n->message.distance < distance)
 			{
 				min_distance = n->message.distance;
