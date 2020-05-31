@@ -184,7 +184,7 @@ PROCESS_THREAD(receive_message, ev, data)
 		
 			if (m->message.mode == 2)
 			{
-				//STATUS = 0;
+				STATUS = 0;
 				char buffer[10];
 				sprintf(buffer, "%d,%d", m->message.srcID, 2);
 				prepareMessage(&my_send_message, buffer, myID, 1, 4, 0);
@@ -203,7 +203,7 @@ PROCESS_THREAD(receive_message, ev, data)
 				//funtion to fake actuator
 				prepareMessage(&my_send_message, "", myID, inMsg->srcID, 2, 0);
 				sendMessage(unicast_connection, &my_send_message);
-				//STATUS = 1;
+				STATUS = 1;
 			}
 			else if (distance < inMsg->distance)
 			{
