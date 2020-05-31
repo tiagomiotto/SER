@@ -117,7 +117,7 @@ int registerConnection(int ID)
     ipaddr = set_global_address();
     
     //For receivers assingn an ID and if it is the sync node start the RPL
-    if (ID == 1)
+    if (ID == SYNC_NODE_ID)
     {
         create_rpl_dag(ipaddr);
     }

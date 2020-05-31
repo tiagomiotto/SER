@@ -48,7 +48,7 @@
 /*SERVICE ID FOR SYNC NODE IS 1*/
 #define UDP_PORT 1234
 #define UNICAST_PORT 1235
-#define ID 1
+
 
 /* Network State Variables*/
 /* This #define defines the maximum amount of neighbors we can remember. */
@@ -174,7 +174,7 @@ PROCESS_THREAD(handler_process, ev, data)
     if (strcmp(token, "on") == 0 || strcmp(token, "off") == 0)
     {
 
-      prepareMessage(&my_message,token, ID, destID, 3, 0);
+      prepareMessage(&my_message,token,SYNC_NODE_ID, destID, 3, 0);
       process_post(&communications_process,
                    PROCESS_EVENT_CONTINUE, &my_message);
     }
