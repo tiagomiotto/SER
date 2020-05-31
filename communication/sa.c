@@ -133,18 +133,12 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	PROCESS_BEGIN();
 	static struct etimer et;
 	uip_ipaddr_t addr;
-    time_t t;
-    random_init(time(&t));
 
 	servreg_hack_init();
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
 
                           printf("Delay max %d\n", DELAY_MAX);
-	uip_ipaddr_t *ipaddr;
-
-    ipaddr = set_global_address();
-	random_init(*(uint16_t*)*ipaddr);
   static struct etimer timer;
   etimer_set(&timer, DELAY_MAX);
   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
