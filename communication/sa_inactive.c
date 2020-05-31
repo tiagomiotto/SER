@@ -138,6 +138,11 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
 
+                          printf("Delay max %d\n", DELAY_MAX);
+  static struct etimer timer;
+  etimer_set(&timer, DELAY_MAX);
+  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+
 	myID = registerConnection(ID);
 
 	//SENSORS_ACTIVATE(button_sensor);

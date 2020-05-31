@@ -140,6 +140,11 @@ PROCESS_THREAD(send_message_handler, ev, data)
 
 	myID = registerConnection(ID);
 
+	  printf("Delay max %d\n", DELAY_MAX);
+  static struct etimer timer;
+  etimer_set(&timer, DELAY_MAX);
+  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+
 	//SENSORS_ACTIVATE(button_sensor);
 	etimer_set(&et, CLOCK_SECOND * 30);
 	while (1)
