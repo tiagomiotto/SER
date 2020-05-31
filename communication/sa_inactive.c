@@ -184,7 +184,7 @@ PROCESS_THREAD(receive_message, ev, data)
                 off = false;
             if (strcmp(inMsg->data, "off") == 0)
                 off = true;
-            prepareMessage(&my_send_message, buffer, myID, inMsg->srcID, 4, 0);
+            prepareMessage(&my_send_message, "", myID, inMsg->srcID, 4, 0);
             sendMessage(unicast_connection, &my_send_message);
         }
 
