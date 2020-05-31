@@ -189,7 +189,7 @@ PROCESS_THREAD(receive_message, ev, data)
 				STATUS = 0;
 				char buffer[10];
 				sprintf(buffer, "%d,%d", m->message.srcID, 2);
-				prepareMessage(&my_send_message, buffer, myID, 1, 4, 0);
+				prepareMessage(&my_send_message, buffer, m->message.srcID, 1, 4, 0);
 				sendMessage(unicast_connection, &my_send_message);
 			}
 			else if (m->message.mode == 0){
