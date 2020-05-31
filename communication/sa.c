@@ -46,14 +46,14 @@ struct message_list {//active
 MEMB(message_memb, struct message_list, MAX_NODES);
 LIST(message_list);
 
-void prepareMessage(struct Message message, char* msg, uint8_t srcID,
-	uint8_t destID, uint8_t mode, uint8_t distance) {
+// void prepareMessage(struct Message *message, char* msg, uint8_t srcID,
+// 	uint8_t destID, uint8_t mode, uint8_t distance) {
 
-    message.srcID = srcID;
-    message.destID = destID;
-    message.mode = mode;
-		message.distance = distance;
-}
+//     message.srcID = srcID;
+//     message.destID = destID;
+//     message.mode = mode;
+// 	message.distance = distance;
+// }
 
 /******************************************************************************/
 PROCESS(my_distance, "Measure my distance to the target");
@@ -75,7 +75,7 @@ static void receiver(struct simple_udp_connection *c,
   printf("Data received on port %d from port %d with length %d : %s\n",
          receiver_port, sender_port, datalen, (char *)data);
 	process_post(&receive_message,
-               PROCESS_EVENT_CONTINUE, &data);
+               PROCESS_EVENT_CONTINUE, data);
 }
 /******************************************************************************/
 int generate_random_distance(int pos) {
@@ -122,43 +122,43 @@ PROCESS_THREAD(my_distance, ev, data) {
   PROCESS_END();
 }
 /*----------------------------------------------------------------SEND_MESSAGE*/
-static void tcpip_handler(void) {
-  char *appdata;
+// static void tcpip_handler(void) {
+//   char *appdata;
 
-  if(uip_newdata()) {
-    appdata = (char *)uip_appdata;
-    appdata[uip_datalen()] = 0;
-    PRINTF("DATA recv '%s' from ", appdata);
-    PRINTF("%d",
-           UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]);
-    PRINTF("\n");
-#if SERVER_REPLY
-    PRINTF("DATA sending reply\n");
-    uip_ipaddr_copy(&server_conn->ripaddr, &UIP_IP_BUF->srcipaddr);
-    uip_udp_packet_send(server_conn, "Reply", sizeof("Reply"));
-    uip_create_unspecified(&server_conn->ripaddr);
-#endif
-  }
-}
+//   if(uip_newdata()) {
+//     appdata = (char *)uip_appdata;
+//     appdata[uip_datalen()] = 0;
+//     PRINTF("DATA recv '%s' from ", appdata);
+//     PRINTF("%d",
+//            UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]);
+//     PRINTF("\n");
+// #if SERVER_REPLY
+//     PRINTF("DATA sending reply\n");
+//     uip_ipaddr_copy(&server_conn->ripaddr, &UIP_IP_BUF->srcipaddr);
+//     uip_udp_packet_send(server_conn, "Reply", sizeof("Reply"));
+//     uip_create_unspecified(&server_conn->ripaddr);
+// #endif
+//   }
+// }
 
-/******************************************************************************/
-static void print_local_addresses(void) {
-  int i;
-  uint8_t state;
+// /******************************************************************************/
+// static void print_local_addresses(void) {
+//   int i;
+//   uint8_t state;
 
-  PRINTF("IPv6 addresses: ");
-  for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
-    state = uip_ds6_if.addr_list[i].state;
-    if(state == ADDR_TENTATIVE || state == ADDR_PREFERRED) {
-      PRINT6ADDR(&uip_ds6_if.addr_list[i].ipaddr);
-      PRINTF("\n");
-      /* hack to make address "final" */
-      if (state == ADDR_TENTATIVE) {
-	uip_ds6_if.addr_list[i].state = ADDR_PREFERRED;
-      }
-    }
-  }
-}
+//   PRINTF("IPv6 addresses: ");
+//   for(i = 0; i < UIP_DS6_ADDR_NB; i++) {
+//     state = uip_ds6_if.addr_list[i].state;
+//     if(state == ADDR_TENTATIVE || state == ADDR_PREFERRED) {
+//       PRINT6ADDR(&uip_ds6_if.addr_list[i].ipaddr);
+//       PRINTF("\n");
+//       /* hack to make address "final" */
+//       if (state == ADDR_TENTATIVE) {
+// 	uip_ds6_if.addr_list[i].state = ADDR_PREFERRED;
+//       }
+//     }
+//   }
+// }
 /******************************************************************************/
 PROCESS_THREAD(send_message_handler, ev, data) {
 	static struct etimer et;
@@ -231,7 +231,7 @@ PROCESS_THREAD(send_message_handler, ev, data) {
 			PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
 			uip_create_linklocal_allnodes_mcast(&addr);
-			prepareMessage(*my_send_message, "", myID, 0, 0, distance);
+			prepareMessage(&my_send_message, "", myID, 0, 0, distance);
 			simple_udp_sendto(&unicast_connection, my_send_message, sizeof(my_send_message), &addr);
 		}
 	}

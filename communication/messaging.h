@@ -20,16 +20,17 @@
 
 struct Message
 {
-  char msg[50];
+  char data[50];
   int srcID;
   int destID;
-  int code;
+  int mode;
+  int distance;
 };
 
 void sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX);
 
-struct Message prepareMessage(char* data, int srcID,int destID, int code);
+void prepareMessage(struct Message* message,char* data, int srcID,int destID, int mode, int distance);
 
 uip_ipaddr_t* set_global_address(void);
 
