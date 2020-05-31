@@ -233,7 +233,7 @@ PROCESS_THREAD(message_received_handler, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
     struct Message *inMsg = (struct Message *)data;
     messageRx = *inMsg;
-    
+    char *pEnd;
 
     if (messageRx.code == 4)
     {
