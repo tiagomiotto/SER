@@ -184,7 +184,7 @@ PROCESS_THREAD(receive_message, ev, data)
 		}
 
 		if(off) {
-			printf("I'm off\n");
+			printf("Override off\n");
 			continue; 
 		}
 
