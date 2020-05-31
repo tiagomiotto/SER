@@ -34,7 +34,7 @@
 int STATUS = 0; // 0 if not active 1 if active
 volatile int distance;
 int myID;
-bool off=false;
+bool off = false;
 struct Message my_received_message; //Not active
 struct Message my_send_message;
 static struct simple_udp_connection unicast_connection;
@@ -63,8 +63,7 @@ PROCESS(send_message_handler, "Send message to node(s)");
 PROCESS(receive_message, "Receive message from node(s)");
 PROCESS(receive_message_handler, "Handle received message");
 
-
-AUTOSTART_PROCESSES(&my_distance, &send_message_handler,  &receive_message, &receive_message_handler);
+AUTOSTART_PROCESSES(&my_distance, &send_message_handler, &receive_message, &receive_message_handler);
 /******************************************************************************/
 static void receiver(struct simple_udp_connection *c,
 					 const uip_ipaddr_t *sender_addr,
@@ -89,7 +88,7 @@ static void receiver(struct simple_udp_connection *c,
 int generate_random_distance(int pos)
 {
 	time_t t;
-	srand(myID);
+	srand(myID * random_rand() % 15);
 	int new_pos;
 
 	int pos_array[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -119,7 +118,7 @@ PROCESS_THREAD(my_distance, ev, data)
 	static struct etimer et;
 	time_t t;
 
-	srand(myID);
+	srand(myID * random_rand() % 15);
 	distance = rand() % 20;
 	while (1)
 	{
@@ -140,13 +139,21 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
 
-//                           printf("Delay max %d\n", DELAY_MAX);
-//   static struct etimer timer;
-//   etimer_set(&timer, DELAY_MAX);
-//   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+	//                           printf("Delay max %d\n", DELAY_MAX);
+	//   static struct etimer timer;
+	//   etimer_set(&timer, DELAY_MAX);
+	//   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
 	myID = registerConnection(ID);
-	if(myID==2) STATUS=1;
+	if (myID == 2)
+	{
+		printf("I'm the starting active\n");
+		STATUS = 1;
+
+		prepareMessage(&my_send_message, "", myID, 1, 4, 0);
+		sendMessage(unicast_connection, &my_send_message);
+	}
+
 	//SENSORS_ACTIVATE(button_sensor);
 	etimer_set(&et, CLOCK_SECOND * 30);
 	while (1)
@@ -175,28 +182,30 @@ PROCESS_THREAD(receive_message, ev, data)
 	while (1)
 	{
 		PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
-        struct Message *inMsg = (struct Message *)data;
+		struct Message *inMsg = (struct Message *)data;
 
-		if (inMsg->mode == 3 && inMsg->srcID == 1){
-			if(strcmp(inMsg->data,"on")==0) off=false;
-			if(strcmp(inMsg->data,"off")==0) off=true;
+		if (inMsg->mode == 3 && inMsg->srcID == 1)
+		{
+			if (strcmp(inMsg->data, "on") == 0)
+				off = false;
+			if (strcmp(inMsg->data, "off") == 0)
+				off = true;
 			prepareMessage(&my_send_message, inMsg->data, myID, inMsg->srcID, 3, 0);
 			sendMessage(unicast_connection, &my_send_message);
 		}
 
-		if(off) {
+		if (off)
+		{
 			printf("I was turned off\n");
-			continue; 
+			continue;
 		}
 
 		if (STATUS == 1)
 		{
-			
-			
-			
+
 			m = memb_alloc(&message_memb);
 			m->message = *inMsg;
-		
+
 			if (m->message.mode == 2)
 			{
 				STATUS = 0;
@@ -205,19 +214,20 @@ PROCESS_THREAD(receive_message, ev, data)
 				prepareMessage(&my_send_message, buffer, m->message.srcID, 1, 4, 0);
 				sendMessage(unicast_connection, &my_send_message);
 			}
-			else if (m->message.mode == 0){
-                list_add(message_list, m);
-                process_post(&receive_message_handler,
-                PROCESS_EVENT_CONTINUE, data);
-                // prepareMessage(&my_send_message, "", myID, m->message.srcID, 1, 0);
-                // sendMessage(unicast_connection, &my_send_message);
-				}
+			else if (m->message.mode == 0)
+			{
+				list_add(message_list, m);
+				process_post(&receive_message_handler,
+							 PROCESS_EVENT_CONTINUE, data);
+				// prepareMessage(&my_send_message, "", myID, m->message.srcID, 1, 0);
+				// sendMessage(unicast_connection, &my_send_message);
+			}
 		}
 		//is not active node
 		else
 		{
-			
-            printf("Mode received: %d\n", inMsg->mode);
+
+			printf("Mode received: %d\n", inMsg->mode);
 			if (inMsg->mode == 1)
 			{
 				//funtion to fake actuator
@@ -253,8 +263,8 @@ PROCESS_THREAD(receive_message_handler, ev, data)
 
 		for (n = list_head(message_list); n != NULL; n = list_item_next(n))
 		{
-            printf("My distance %d, node distance %d is  %d, min dist %d\n", 
-			distance, n->message.srcID, n->message.distance, min_distance);
+			printf("My distance %d, node distance %d is  %d, min dist %d\n",
+				   distance, n->message.srcID, n->message.distance, min_distance);
 			if (n->message.distance < min_distance && n->message.distance < distance)
 			{
 				min_distance = n->message.distance;
@@ -264,12 +274,12 @@ PROCESS_THREAD(receive_message_handler, ev, data)
 
 		if (min_distance_p != NULL)
 		{
-           // if ((float)min_distance_p->message.distance / distance < 0.75)
-           // {
-               printf("Sending message to new active node \n");
-                prepareMessage(&my_send_message, "", myID, min_distance_p->message.srcID, 1, 0);
-                sendMessage(unicast_connection, &my_send_message);
-            //}
+			// if ((float)min_distance_p->message.distance / distance < 0.75)
+			// {
+			printf("Sending message to new active node \n");
+			prepareMessage(&my_send_message, "", myID, min_distance_p->message.srcID, 1, 0);
+			sendMessage(unicast_connection, &my_send_message);
+			//}
 		}
 	}
 	PROCESS_END();
