@@ -339,7 +339,7 @@ void deleteList()
 {
   struct node *n;
   //Cycle through all the nodes to clear
-  for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
+  for (n = list_head(message_list); n != NULL; n = list_item_next(n))
   {
 
     list_remove(message_list, n);
