@@ -48,7 +48,7 @@ struct message_list
 MEMB(message_memb, struct message_list, MAX_NODES);
 LIST(message_list);
 void deleteList();
-void actuator();
+void actuatorHandler();
 /******************************************************************************/
 PROCESS(my_distance, "Measure my distance to the target");
 PROCESS(send_message_handler, "Send message to node(s)");

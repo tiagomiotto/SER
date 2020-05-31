@@ -353,18 +353,6 @@ void deleteNode(int nodeID)
   n = searchInList(nodeID);
   list_remove(nodes_list, n);
   memb_free(&nodes_memb, n);
-  // //Cycle through all the nodes to find the node which changed state.
-  // for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
-  // {
-
-  //   // We break out of the loop if the address of the noode already exists in the list
-  //   if (n->id == nodeID)
-  //   {
-  //     list_remove(nodes_list, n);
-  //     memb_free(&nodes_memb, n);
-  //     break;
-  //   }
-  // }
 }
 
 void deleteList()
