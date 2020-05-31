@@ -145,7 +145,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	//   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
 	myID = registerConnection(ID);
-	if (myID == 2)
+	if (myID == 101 || myID ==102) //Caso o sync seja iniciado primeiro
 	{
 		printf("I'm the starting active\n");
 		STATUS = 1;
