@@ -87,12 +87,9 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
 
-  struct Message my_message;
+  struct Message my_message = prepareMessage("",  190,  1,  4);
   
  
-  my_message.destID=1;
-  my_message.srcID=190;
-  my_message.code=4;
 
 
 
