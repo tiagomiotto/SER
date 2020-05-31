@@ -355,19 +355,14 @@ void deleteList()
 void purgeNodeList(){
     
   struct node *n;
-  servreg_hack_item_t *item;
+ 
+  uip_ipaddr_t *addr;
+    
   //Cycle through all the nodes to find the node which changed state.
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
-    for (item = servreg_hack_list_head();
-       item != NULL;
-       item = list_item_next(item))
-    {
-     
-    if(n->id == servreg_hack_item_id(item)) break;
-    }
-
-  if(item==NULL) {
+  addr = servreg_hack_lookup(n->id);
+  if(addr==NULL) {
     list_remove(nodes_list, n);
     memb_free(&nodes_memb, n);
   }
