@@ -137,7 +137,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
     uip_ipaddr_t addr;
     time_t t;
     random_init(time(&t));
-    print("%d rime \n", (int) rimeaddr_node_addr)
+    printf("%d rime \n", (int) rimeaddr_node_addr)
     servreg_hack_init();
     simple_udp_register(&unicast_connection, UDP_PORT,
                         NULL, UDP_PORT, receiver);
