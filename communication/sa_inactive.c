@@ -133,6 +133,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	PROCESS_BEGIN();
 	static struct etimer et;
 	uip_ipaddr_t addr;
+    time_t t;
 
 	servreg_hack_init();
 	simple_udp_register(&unicast_connection, UDP_PORT,
