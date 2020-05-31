@@ -135,11 +135,13 @@ PROCESS_THREAD(send_message_handler, ev, data)
   	static struct etimer timer;
   	etimer_set(&timer, DELAY_MAX);
   	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
-	if (myID == 101 || myID == 102) //Caso o sync seja iniciado primeiro
+	
+	//102 is in case the sync node is added to network before the SA node
+	if (myID == 101 || myID == 102) 
 	{
 		printf("I'm the starting active\n");
 		STATUS = 1;
-
+		actuatorHandler(1);
 		prepareMessage(&my_send_message, "", myID, 1, 4, 0);
 		while(!sendMessage(unicast_connection, &my_send_message)){
 			printf("Waiting a little more and trying again\n");
