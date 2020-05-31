@@ -83,8 +83,8 @@ void purgeNodeList();
 void updateNodesDistances(char* msg);
 struct node* searchInList(int nodeID)
 
-volatile int servHackListSize = 0;
-volatile int nodesListSize=0;
+// volatile int servHackListSize = 0;
+// volatile int nodesListSize=0;
 
 #define SEND_INTERVAL (20 * CLOCK_SECOND)
 
