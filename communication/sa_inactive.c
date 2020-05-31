@@ -142,7 +142,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
                         	uip_ipaddr_t *ipaddr;
 
     ipaddr = set_global_address();
-	random_init(*ipaddr);
+	random_init(*(uint16_t*)ipaddr);
 
                           printf("Delay max %d\n", DELAY_MAX);
   static struct etimer timer;

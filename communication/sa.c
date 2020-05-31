@@ -144,7 +144,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	uip_ipaddr_t *ipaddr;
 
     ipaddr = set_global_address();
-	random_init(*ipaddr);
+	random_init(*(uint16_t*)*ipaddr);
   static struct etimer timer;
   etimer_set(&timer, DELAY_MAX);
   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
