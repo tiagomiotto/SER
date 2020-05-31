@@ -82,7 +82,8 @@ receiver(struct simple_udp_connection *c,
 PROCESS_THREAD(unicast_receiver_process, ev, data)
 {
   uip_ipaddr_t *ipaddr;
-  
+      time_t t;
+    random_init(time(&t));
   PROCESS_BEGIN();
   servreg_hack_init();
 
