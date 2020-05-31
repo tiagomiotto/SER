@@ -107,7 +107,7 @@ int generate_random_distance(int pos)
 	}
 	if (new_pos < 0)
 		new_pos = abs(new_pos);
-	printf("%d\n", new_pos);
+	printf("Target distance: %d\n", new_pos);
 	return new_pos;
 }
 /*--------------------------------------------------------------------DISTANCE*/
@@ -139,13 +139,9 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
 
-	//                           printf("Delay max %d\n", DELAY_MAX);
-	//   static struct etimer timer;
-	//   etimer_set(&timer, DELAY_MAX);
-	//   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
 	myID = registerConnection(ID);
-	printf("Delay a few seconds before starting %d\n", DELAY_MAX);
+	printf("Delay a few seconds before starting, so the routing table can update %d\n", DELAY_MAX);
   	static struct etimer timer;
   	etimer_set(&timer, DELAY_MAX);
   	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
@@ -169,7 +165,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 		{
 			uip_create_linklocal_allnodes_mcast(&addr);
 			prepareMessage(&my_send_message, "", myID, 0, 0, distance);
-			//printf(" %s, %d, %d, %d\n", my_send_message.data, my_send_message.destID, my_send_message.srcID, my_send_message.mode);
+			
 			simple_udp_sendto(&unicast_connection, &my_send_message, sizeof(struct Message) + 1, &addr);
 		}
 	}

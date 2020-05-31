@@ -15,7 +15,7 @@
 #include "node-id.h"
 
 
-#define DELAY_MAX (random_rand() % (10 * CLOCK_SECOND) + (5 * CLOCK_SECOND)) * 3
+#define DELAY_MAX (random_rand() % (10 * CLOCK_SECOND) + (5 * CLOCK_SECOND))
 #define STATE_OFF 0
 #define STATE_ON 1
 #define STATE_ACTIVE 2
