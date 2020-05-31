@@ -36,7 +36,7 @@ void sendStateToSync(struct simple_udp_connection connection, int mydID, int sta
     }
 }
 
-struct Message prepareMessage(char *data, uint8_t srcID, uint8_t destID, uint8_t code)
+struct Message prepareMessage(char *data, int srcID, int destID, int code)
 {
     struct Message messageTx;
     strcpy(messageTx.msg, data);
@@ -50,7 +50,7 @@ uip_ipaddr_t *set_global_address(void)
 {
     static uip_ipaddr_t ipaddr;
     int i;
-    uint8_t state;
+    int state;
 
     uip_ip6addr(&ipaddr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
     uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
@@ -93,10 +93,10 @@ void create_rpl_dag(uip_ipaddr_t *ipaddr)
     }
 }
 
-uint8_t generateID()
+int generateID()
 {
     servreg_hack_item_t *item;
-    uint8_t max = 0;
+    int max = 0;
     for (item = servreg_hack_list_head();
          item != NULL;
          item = list_item_next(item))
@@ -110,7 +110,7 @@ uint8_t generateID()
     return 190;
 }
 
-int registerConnection(uint8_t ID)
+int registerConnection(int ID)
 {
     uip_ipaddr_t *ipaddr;
 

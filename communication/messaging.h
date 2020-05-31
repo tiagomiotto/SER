@@ -21,20 +21,20 @@
 struct Message
 {
   char msg[50];
-  uint8_t srcID;
-  uint8_t destID;
-  uint8_t code;
+  int srcID;
+  int destID;
+  int code;
 };
 
 void sendMessage(struct simple_udp_connection connection,
                   struct Message *messageTX);
 
-struct Message prepareMessage(char* data, uint8_t srcID,uint8_t destID, uint8_t code);
+struct Message prepareMessage(char* data, int srcID,int destID, int code);
 
 uip_ipaddr_t* set_global_address(void);
 
 void create_rpl_dag(uip_ipaddr_t *ipaddr);
 
-int registerConnection(uint8_t ID);
+int registerConnection(int ID);
 
 void sendStateToSync(struct simple_udp_connection connection, int mydID, int state);
