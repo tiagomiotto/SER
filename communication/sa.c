@@ -145,6 +145,10 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	//   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
 	myID = registerConnection(ID);
+	printf("Delay a few seconds before starting %d\n", DELAY_MAX);
+  	static struct etimer timer;
+  	etimer_set(&timer, DELAY_MAX);
+  	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 	if (myID == 101 || myID ==102) //Caso o sync seja iniciado primeiro
 	{
 		printf("I'm the starting active\n");
