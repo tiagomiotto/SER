@@ -63,7 +63,7 @@ PROCESS(send_message_handler, "Send message to node(s)");
 PROCESS(receive_message_handler, "Handle received message");
 PROCESS(receive_message, "Receive message from node(s)");
 
-AUTOSTART_PROCESSES(&my_distance, &send_message_handler, /*&receive_message_handler,*/ &receive_message);
+AUTOSTART_PROCESSES(&my_distance, &send_message_handler, &receive_message_handler, &receive_message);
 /******************************************************************************/
 static void receiver(struct simple_udp_connection *c,
                      const uip_ipaddr_t *sender_addr,
