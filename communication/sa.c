@@ -171,10 +171,10 @@ PROCESS_THREAD(receive_message, ev, data)
 		if (STATUS == 1)
 		{
 			struct Message *inMsg = (struct Message *)data;
-
+			
 			m = memb_alloc(&message_memb);
 			m->message = *inMsg;
-
+			printf("%d\n",m->message.mode )
 			if (m->message.mode == 2)
 			{
 				STATUS = 0;
