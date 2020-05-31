@@ -31,7 +31,7 @@
 #define UNICAST_PORT 1235
 #define ID 0
 
-int STATUS = 0; // 0 if not active 1 if active
+int STATUS = 1; // 0 if not active 1 if active
 int distance = -1;
 int myID;
 struct Message *my_received_message; //Not active
@@ -145,12 +145,10 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	while (1)
 	{
 		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-		etimer_set(&et, CLOCK_SECOND * 30);
+		etimer_reset(&et);
 		//active node
 		if (STATUS == 1)
 		{
-			
-			
 			uip_create_linklocal_allnodes_mcast(&addr);
 			prepareMessage(my_send_message, "", myID, 0, 0, distance);
 			simple_udp_sendto(&unicast_connection, my_send_message, sizeof(my_send_message), &addr);
