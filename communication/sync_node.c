@@ -254,8 +254,8 @@ bool updateNodeList_ActiveNode(int nodeID, int state)
   servreg_hack_item_t *item;
   struct node *n;
 
-  // if (nodeID == activeNode)
-  //   return false;
+  if (nodeID == activeNode)
+    return false;
   //Cycle through all the nodes to update the list, adding those missing and updating the node
   for (item = servreg_hack_list_head();
        item != NULL;
