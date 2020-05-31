@@ -196,9 +196,9 @@ void search_list()
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
     if (list_item_next(n) != NULL)
-      printf("%d | %d, ", n->id, n->state);
+      printf("%d, ", n->id);
     else
-      printf("%d | %d \n", n->id, n->state);
+      printf("%d \n", n->id);
   }
 }
 
@@ -241,6 +241,8 @@ PROCESS_THREAD(message_received_handler, ev, data)
     {
 
       updateNodeList_ActiveNode(messageRx.srcID, STATE_ACTIVE);
+      printf("New state of the network \n");
+      printNetworkInfo();
       //updateNodesDistances(messageRx.msg);
 
     }
