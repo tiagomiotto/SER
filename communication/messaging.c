@@ -119,11 +119,10 @@ int registerConnection(int ID)
     //For receivers assingn an ID and if it is the sync node start the RPL
     if (ID == 1)
     {
-
         create_rpl_dag(ipaddr);
     }
     else
-        ID = generateID();
+        ID = node_id;
     printf("My ID is: %d\n", ID);
     servreg_hack_register(ID, ipaddr);
 

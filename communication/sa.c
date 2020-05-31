@@ -89,7 +89,7 @@ static void receiver(struct simple_udp_connection *c,
 int generate_random_distance(int pos)
 {
 	time_t t;
-	srand((unsigned)time(&t));
+	srand(myID);
 	int new_pos;
 
 	int pos_array[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -135,15 +135,15 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	PROCESS_BEGIN();
 	static struct etimer et;
 	uip_ipaddr_t addr;
-	printf("node id%d\n", node_id);
+	random_init(node_id);
 	servreg_hack_init();
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
 
-                          printf("Delay max %d\n", DELAY_MAX);
-  static struct etimer timer;
-  etimer_set(&timer, DELAY_MAX);
-  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
+//                           printf("Delay max %d\n", DELAY_MAX);
+//   static struct etimer timer;
+//   etimer_set(&timer, DELAY_MAX);
+//   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&timer));
 
 	myID = registerConnection(ID);
 
