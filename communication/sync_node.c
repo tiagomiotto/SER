@@ -213,7 +213,7 @@ PROCESS_THREAD(communications_process, ev, data)
   simple_udp_register(&unicast_connection, UDP_PORT,
                       NULL, UDP_PORT, receiver);
 
-  registerConnection(ID);
+  registerConnection(SYNC_NODE_ID);
 
   while (1)
   {
