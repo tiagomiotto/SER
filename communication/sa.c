@@ -34,6 +34,7 @@
 int STATUS = 1; // 0 if not active 1 if active
 volatile int distance;
 int myID;
+bool off=false;
 struct Message my_received_message; //Not active
 struct Message my_send_message;
 static struct simple_udp_connection unicast_connection;
@@ -174,6 +175,16 @@ PROCESS_THREAD(receive_message, ev, data)
 	{
 		PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
         struct Message *inMsg = (struct Message *)data;
+
+		if (inMsg->mode == 3 && inMsg->srcID == 1){
+			if(strcmp(inMsg->data,"on")==0) off=false;
+			if(strcmp(inMsg->data,"off")==0) off=true;
+			prepareMessage(&my_send_message, buffer, myID, inMsg->srcID, 4, 0);
+			sendMessage(unicast_connection, &my_send_message);
+		}
+
+		if(off) continue; 
+
 		if (STATUS == 1)
 		{
 			
