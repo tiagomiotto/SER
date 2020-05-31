@@ -177,8 +177,7 @@ PROCESS_THREAD(handler_process, ev, data)
     {
 
       prepareMessage(&my_message,token,SYNC_NODE_ID, destID, 3, 0);
-      process_post(&communications_process,
-                   PROCESS_EVENT_CONTINUE, &my_message);
+      sendMessage(unicast_connection,my_message);
     }
     else
       printf("Invalid command\n");
