@@ -134,23 +134,23 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	static struct etimer et;
 	uip_ipaddr_t addr;
 
-
-
 	servreg_hack_init();
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
 
 	myID = registerConnection(ID);
 
-	SENSORS_ACTIVATE(button_sensor);
+	//SENSORS_ACTIVATE(button_sensor);
 	etimer_set(&et, CLOCK_SECOND * 30);
 	while (1)
 	{
+		PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+		etimer_set(&et, CLOCK_SECOND * 30);
 		//active node
 		if (STATUS == 1)
 		{
-			PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-			etimer_set(&et, CLOCK_SECOND * 30);
+			
+			
 			uip_create_linklocal_allnodes_mcast(&addr);
 			prepareMessage(my_send_message, "", myID, 0, 0, distance);
 			simple_udp_sendto(&unicast_connection, my_send_message, sizeof(my_send_message), &addr);
