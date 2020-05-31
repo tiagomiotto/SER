@@ -137,7 +137,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	servreg_hack_init();
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
-random_init(*(uint16_t*)(&rimeaddr_node_addr))
+random_init(*(uint16_t*)time(&t));
                           printf("Delay max %d\n", DELAY_MAX);
   static struct etimer timer;
   etimer_set(&timer, DELAY_MAX);
