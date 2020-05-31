@@ -34,17 +34,14 @@
 #include "lib/random.h"
 #include "sys/ctimer.h"
 #include "sys/etimer.h"
-#include "net/ip/uip.h"
-#include "net/ipv6/uip-ds6.h"
-#include "net/ip/uip-debug.h"
 
-#include "sys/node-id.h"
-
-#include "simple-udp.h"
-#include "servreg-hack.h"
+#include "net/rpl/rpl.h"
 
 #include <stdio.h>
 #include <string.h>
+
+#include "messaging.h"
+
 
 #define UDP_PORT 1234
 #define SERVICE_ID 180
