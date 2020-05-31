@@ -34,8 +34,8 @@
 int STATUS = 1; // 0 if not active 1 if active
 int distance = -1;
 int myID;
-struct Message *my_received_message; //Not active
-struct Message *my_send_message;
+struct Message my_received_message; //Not active
+struct Message my_send_message;
 static struct simple_udp_connection unicast_connection;
 
 struct message_list
@@ -149,9 +149,9 @@ PROCESS_THREAD(send_message_handler, ev, data)
 		//active node
 		if (STATUS == 1)
 		{
-			uip_create_linklocal_allnodes_mcast(&addr);
-			prepareMessage(my_send_message, "", myID, 0, 0, distance);
-        	printf(" %s, %d, %d, %d\n", my_send_message->data, my_send_message->destID, my_send_message->srcID, my_send_message->mode);
+			//uip_create_linklocal_allnodes_mcast(&addr);
+			prepareMessage(&my_send_message, "", myID, 0, 0, distance);
+        	printf(" %s, %d, %d, %d\n", my_send_message.data, my_send_message.destID, my_send_message.srcID, my_send_message.mode);
 			//simple_udp_sendto(&unicast_connection, my_send_message, sizeof(struct Message), &addr);
 		}
 	}
@@ -181,8 +181,8 @@ PROCESS_THREAD(receive_message, ev, data)
 				STATUS = 0;
 				char buffer[10];
 				sprintf(buffer, "%d,%d", m->message.srcID, 2);
-				prepareMessage(my_send_message, buffer, myID, 1, 4, 0);
-				sendMessage(unicast_connection, my_send_message);
+				prepareMessage(&my_send_message, buffer, myID, 1, 4, 0);
+				sendMessage(unicast_connection, &my_send_message);
 			}
 			else if (m->message.mode == 0)
 				list_add(message_list, m);
@@ -196,14 +196,14 @@ PROCESS_THREAD(receive_message, ev, data)
 			if (m->message.mode == 1)
 			{
 				//funtion to fake actuator
-				prepareMessage(my_send_message, "", myID, m->message.destID, 2, 0);
-				sendMessage(unicast_connection, my_send_message);
+				prepareMessage(&my_send_message, "", myID, m->message.destID, 2, 0);
+				sendMessage(unicast_connection, &my_send_message);
 				STATUS = 1;
 			}
 			else if (distance < m->message.distance)
 			{
-				prepareMessage(my_send_message, "", myID, m->message.destID, 0, distance);
-				sendMessage(unicast_connection, my_send_message);
+				prepareMessage(&my_send_message, "", myID, m->message.destID, 0, distance);
+				sendMessage(unicast_connection, &my_send_message);
 			}
 		}
 	}
@@ -239,8 +239,8 @@ PROCESS_THREAD(receive_message_handler, ev, data)
 		{
 			if ((float)min_distance_p->message.distance / distance < 0.75)
 			{
-				prepareMessage(my_send_message, "", myID, min_distance_p->message.destID, 1, 0);
-				sendMessage(unicast_connection, my_send_message);
+				prepareMessage(&my_send_message, "", myID, min_distance_p->message.destID, 1, 0);
+				sendMessage(unicast_connection, &my_send_message);
 			}
 		}
 	}
