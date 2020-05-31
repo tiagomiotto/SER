@@ -82,6 +82,7 @@ void deleteList();
 void purgeNodeList();
 void updateNodesDistances(char* msg);
 struct node* searchInList(int nodeID);
+void printNetworkInfo();
 
 // volatile int servHackListSize = 0;
 // volatile int nodesListSize=0;
@@ -136,7 +137,8 @@ PROCESS_THREAD(handler_process, ev, data)
 
     if (strcmp(msg, "info") == 0)
     {
-      printf("The current state of the system is %s\n", (char *)msg);
+      printf("The current state of the system is\n";
+      printNetworkInfo();
       continue;
     }
     else if (strcmp(msg, "command") == 0)
@@ -414,4 +416,18 @@ void updateNodesDistances(char* msg){
 
     token = strtok(NULL, ";");
   }
+}
+
+void printNetworkInfo(){
+ 
+  for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
+  {
+
+      printf("%d | ", n->id);
+      if(n->state== STATE_ACTIVE) printf("ACTIVE \n");
+      if(n->state== STATE_ON) printf("ON \n"); 
+      if(n->state== STATE_OFF) printf("OFF \n");
+
+  }
+
 }
