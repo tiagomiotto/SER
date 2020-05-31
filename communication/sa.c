@@ -151,7 +151,8 @@ PROCESS_THREAD(send_message_handler, ev, data)
 		{
 			uip_create_linklocal_allnodes_mcast(&addr);
 			prepareMessage(my_send_message, "", myID, 0, 0, distance);
-			simple_udp_sendto(&unicast_connection, my_send_message, sizeof(struct Message), &addr);
+        	printf(" %s, %d, %d, %d\n", my_send_message->data, my_send_message->destID, my_send_message->srcID, my_send_message->mode);
+			//simple_udp_sendto(&unicast_connection, my_send_message, sizeof(struct Message), &addr);
 		}
 	}
 	PROCESS_END();
