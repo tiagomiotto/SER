@@ -245,8 +245,13 @@ PROCESS_THREAD(message_received_handler, ev, data)
 
     else if (messageRx.code == 3)
     {
-      int state = strtol(messageRx.msg, &pEnd, 10);
-      changeNodeSavedState(messageRx.srcID, state);
+      
+      changeNodeSavedState(messageRx.srcID, STATE_ON);
+    }
+       else if (messageRx.code == 2)
+    {
+      
+      changeNodeSavedState(messageRx.srcID, STATE_OFF);
     }
   }
 
