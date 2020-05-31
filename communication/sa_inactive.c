@@ -60,10 +60,11 @@ LIST(message_list);
 /******************************************************************************/
 PROCESS(my_distance, "Measure my distance to the target");
 PROCESS(send_message_handler, "Send message to node(s)");
-PROCESS(receive_message_handler, "Handle received message");
 PROCESS(receive_message, "Receive message from node(s)");
+PROCESS(receive_message_handler, "Handle received message");
 
-AUTOSTART_PROCESSES(&my_distance, &send_message_handler, &receive_message_handler, &receive_message);
+
+AUTOSTART_PROCESSES(&my_distance, &send_message_handler,  &receive_message, &receive_message_handler);
 /******************************************************************************/
 static void receiver(struct simple_udp_connection *c,
                      const uip_ipaddr_t *sender_addr,
