@@ -115,8 +115,8 @@ receiver(struct simple_udp_connection *c,
          const uint8_t *data,
          uint16_t datalen)
 {
-  printf("Data received on port %d from port %d with length %d : %s\n",
-         receiver_port, sender_port, datalen, (char *)data);
+  //printf("Data received on port %d from port %d with length %d : %s\n",
+        // receiver_port, sender_port, datalen, (char *)data);
   process_post(&message_received_handler,
                PROCESS_EVENT_CONTINUE, data);
 }
