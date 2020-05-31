@@ -150,7 +150,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 		printf("I'm the starting active\n");
 		STATUS = 1;
 
-		prepareMessage(&my_send_message, "", myID, 1, 4, 0);
+		prepareMessage(&my_send_message, "", myID, SYNC_NODE_ID, 4, 0);
 		sendMessage(unicast_connection, &my_send_message);
 	}
 
@@ -184,7 +184,7 @@ PROCESS_THREAD(receive_message, ev, data)
 		PROCESS_WAIT_EVENT_UNTIL(ev == PROCESS_EVENT_CONTINUE);
 		struct Message *inMsg = (struct Message *)data;
 
-		if (inMsg->mode == 3 && inMsg->srcID == 1)
+		if (inMsg->mode == 3 && inMsg->srcID == SYNC_NODE_ID)
 		{
 			if (strcmp(inMsg->data, "on") == 0)
 				off = false;
@@ -211,7 +211,7 @@ PROCESS_THREAD(receive_message, ev, data)
 				STATUS = 0;
 				char buffer[10];
 				sprintf(buffer, "%d,%d", m->message.srcID, 2);
-				prepareMessage(&my_send_message, buffer, m->message.srcID, 1, 4, 0);
+				prepareMessage(&my_send_message, buffer, m->message.srcID, SYNC_NODE_ID, 4, 0);
 				sendMessage(unicast_connection, &my_send_message);
 			}
 			else if (m->message.mode == 0)
