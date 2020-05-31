@@ -93,7 +93,7 @@ static struct simple_udp_connection unicast_connection;
 struct Message my_message;
 struct Message messageRx;
 
-volatile int activeNode = 0;
+volatile int activeNode;
 
 void search_list();
 
