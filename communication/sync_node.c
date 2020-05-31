@@ -239,7 +239,7 @@ PROCESS_THREAD(message_received_handler, ev, data)
     {
 
       updateNodeList_ActiveNode(messageRx.srcID, STATE_ACTIVE);
-      updateNodesDistances(messageRx.msg);
+      //updateNodesDistances(messageRx.msg);
 
     }
 

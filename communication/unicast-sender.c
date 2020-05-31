@@ -109,6 +109,16 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
                       NULL, UDP_PORT, receiver);
 
   etimer_set(&periodic_timer, SEND_INTERVAL);
+
+  struct Message my_message;
+  
+ 
+  my_message.destID=1;
+  my_message.srcID=SERVICE_ID;
+  my_message.code=4;
+
+
+
   while(1) {
 
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
@@ -118,15 +128,8 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
     addr = servreg_hack_lookup(1);
     if(addr != NULL) {
-      static unsigned int message_number;
-      char buf[20];
-
-      printf("Sending unicast to ");
-      uip_debug_ipaddr_print(addr);
-      printf("\n");
-      sprintf(buf, "190,2");
-      message_number++;
-      simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
+    sendMessage(unicast_connection,
+                 &my_message)
     } 
     
   }
