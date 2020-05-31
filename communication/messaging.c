@@ -115,7 +115,7 @@ int registerConnection(int ID)
     uip_ipaddr_t *ipaddr;
 
     ipaddr = set_global_address();
-
+    
     //For receivers assingn an ID and if it is the sync node start the RPL
     if (ID == 1)
     {
