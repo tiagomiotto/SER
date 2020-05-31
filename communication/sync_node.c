@@ -371,4 +371,5 @@ void purgeNodeList(){
     list_remove(nodes_list, n);
     memb_free(&nodes_memb, n);
   }
+  }
 }
