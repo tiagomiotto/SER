@@ -12,6 +12,7 @@
 #include "sys/ctimer.h"
 #include "sys/etimer.h"
 #include "net/rime/rime.h"
+#include "node-id.h"
 
 
 #define DELAY_MAX (random_rand() % (10 * CLOCK_SECOND) + (5 * CLOCK_SECOND)) * 3

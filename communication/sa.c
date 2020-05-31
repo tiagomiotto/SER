@@ -135,7 +135,7 @@ PROCESS_THREAD(send_message_handler, ev, data)
 	PROCESS_BEGIN();
 	static struct etimer et;
 	uip_ipaddr_t addr;
-
+	print("node id%d\n", node_id);
 	servreg_hack_init();
 	simple_udp_register(&unicast_connection, UDP_PORT,
 						NULL, UDP_PORT, receiver);
