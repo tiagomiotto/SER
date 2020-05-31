@@ -183,7 +183,10 @@ PROCESS_THREAD(receive_message, ev, data)
 			sendMessage(unicast_connection, &my_send_message);
 		}
 
-		if(off) continue; 
+		if(off) {
+			printf("I'm off\n");
+			continue; 
+		}
 
 		if (STATUS == 1)
 		{
