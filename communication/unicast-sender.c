@@ -114,7 +114,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   
  
   my_message.destID=1;
-  my_message.srcID=SERVICE_ID;
+  my_message.srcID=190;
   my_message.code=4;
 
 
@@ -129,7 +129,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
     addr = servreg_hack_lookup(1);
     if(addr != NULL) {
     sendMessage(unicast_connection,
-                 &my_message)
+                 &my_message);
     } 
     
   }
