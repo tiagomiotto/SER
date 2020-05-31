@@ -32,7 +32,7 @@
 #define ID 0
 
 int STATUS = 1; // 0 if not active 1 if active
-int distance = -1;
+voltatile int distance;
 int myID;
 struct Message my_received_message; //Not active
 struct Message my_send_message;
@@ -62,8 +62,7 @@ PROCESS(send_message_handler, "Send message to node(s)");
 PROCESS(receive_message_handler, "Handle received message");
 PROCESS(receive_message, "Receive message from node(s)");
 
-AUTOSTART_PROCESSES(&my_distance, &send_message_handler
-					/*,&receive_message_handler, &receive_message*/);
+AUTOSTART_PROCESSES(&my_distance, &send_message_handler, &receive_message_handler, &receive_message);
 /******************************************************************************/
 static void receiver(struct simple_udp_connection *c,
 					 const uip_ipaddr_t *sender_addr,
@@ -74,12 +73,12 @@ static void receiver(struct simple_udp_connection *c,
 					 uint16_t datalen)
 {
 
-  printf("Data received from ");
-  uip_debug_ipaddr_print(sender_addr);
-  struct Message *inMsg = (struct Message *)data;
-  my_received_message = *inMsg;
-  printf(" on port %d from port %d, with ID %d, with length %d: '%s'\n",
-         receiver_port, sender_port, my_received_message.srcID, datalen, my_received_message.data);
+	printf("Data received from ");
+	uip_debug_ipaddr_print(sender_addr);
+	struct Message *inMsg = (struct Message *)data;
+	my_received_message = *inMsg;
+	printf(" on port %d from port %d, with ID %d, with length %d: '%d'\n",
+		   receiver_port, sender_port, my_received_message.srcID, datalen, my_received_message.distance);
 
 	process_post(&receive_message,
 				 PROCESS_EVENT_CONTINUE, data);
@@ -118,12 +117,8 @@ PROCESS_THREAD(my_distance, ev, data)
 	static struct etimer et;
 	time_t t;
 
-	//first distance
-	if (distance == -1)
-	{
-		srand((unsigned)time(&t));
-		distance = rand() % 20;
-	}
+	srand((unsigned)time(&t));
+	distance = rand() % 20;
 	while (1)
 	{
 		//generate a new distance every ten seconds
@@ -155,9 +150,9 @@ PROCESS_THREAD(send_message_handler, ev, data)
 		if (STATUS == 1)
 		{
 			uip_create_linklocal_allnodes_mcast(&addr);
-			prepareMessage(&my_send_message, "test", myID, 0, 0, distance);
-        	printf(" %s, %d, %d, %d\n", my_send_message.data, my_send_message.destID, my_send_message.srcID, my_send_message.mode);
-			simple_udp_sendto(&unicast_connection, &my_send_message, sizeof(struct Message)+1, &addr);
+			prepareMessage(&my_send_message, "", myID, 0, 0, distance);
+			//printf(" %s, %d, %d, %d\n", my_send_message.data, my_send_message.destID, my_send_message.srcID, my_send_message.mode);
+			simple_udp_sendto(&unicast_connection, &my_send_message, sizeof(struct Message) + 1, &addr);
 		}
 	}
 	PROCESS_END();
@@ -166,7 +161,6 @@ PROCESS_THREAD(send_message_handler, ev, data)
 /*-------------------------------------------------------------RECEIVE_MESSAGE*/
 PROCESS_THREAD(receive_message, ev, data)
 {
-
 
 	PROCESS_BEGIN();
 	struct message_list *m, *n, *min_distance_p;
@@ -217,7 +211,7 @@ PROCESS_THREAD(receive_message, ev, data)
 /*-----------------------------------------------------RECEIVE_MESSAGE_HANDLER*/
 PROCESS_THREAD(receive_message_handler, ev, data)
 {
-	
+
 	PROCESS_BEGIN();
 	static struct etimer et;
 	struct message_list *n, *min_distance_p;
