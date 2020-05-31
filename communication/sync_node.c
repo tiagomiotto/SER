@@ -198,7 +198,7 @@ void search_list()
     if (list_item_next(n) != NULL)
       printf("%d, ", n->id);
     else
-      printf("%d \n", n->id);
+      printf("%d  \n", n->id);
   }
 }
 
@@ -421,8 +421,7 @@ void updateNodesDistances(char* msg){
 }
 
 void printNetworkInfo(){
-   struct node *n;
-
+ 
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
 
