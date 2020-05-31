@@ -355,7 +355,7 @@ void deleteList()
 void purgeNodeList(){
     
   struct node *n;
-
+  servreg_hack_item_t *item;
   //Cycle through all the nodes to find the node which changed state.
   for (n = list_head(nodes_list); n != NULL; n = list_item_next(n))
   {
