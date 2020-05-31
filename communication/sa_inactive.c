@@ -188,8 +188,11 @@ PROCESS_THREAD(receive_message, ev, data)
             sendMessage(unicast_connection, &my_send_message);
         }
 
-        if (off)
-            continue;
+		if(off) {
+			printf("Override off\n");
+			continue; 
+		}
+
         if (STATUS == 1)
         {
 
